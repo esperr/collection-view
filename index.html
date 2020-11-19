@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  <title>Collection View</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link href="custom.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src=""></script>
+  <script>
+
+  </script>
+
+</head>
+
+<!--
+Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
+-->
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="venn.js"></script>
+<script src="vennframework.js"></script>
+<script src="yearframework.js"></script>
+
+
+<div class="container">
+
+<div id="topbanner" class="jumbotron">
+  <h1>Collection View</h1>
+  <a id="about" class="label label-default" href="about.html">About Collection View</a>
+</div>
+
+<div class="row">
+
+<!--<form id="search">
+    <input id="pmsearch" type="text" />
+    <input id="runsearch" type="button" value="Search by category" />
+</form>
+-->
+
+<div id="left" class="col-sm-12 col-md-6 col-lg-8">
+
+<div id="search" class="input-group input-group-lg">
+  <input type="text" id="pmsearch" class="form-control">
+  <span class="input-group-btn">
+    <button id="runsearch" class="btn btn-primary" type="button">Search</button>
+  </span>
+
+</div>
+
+<div id="breakdown">
+  <div id="splash">
+    <p>Search Workbench lets you easily examine, edit and visualize your <a href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> Searches. See
+      how the parts of your search overlap and observe how it performs over time.</p>
+      <p>Then <em>compare</em> your searches to another in order to zero-in on exactly the terms you want to use.
+      <em><a href="about.html">(more)</a></em></p>
+    </div>
+</div>
+
+<div id="charts">
+    <div id="formatpanel" class="panel panel-default hideme">
+      <div class="panel-heading">
+        <a href="questionsandanswers.html#yearplanation" target="_qanda"><span class="question-prompt glyphicon glyphicon-question-sign"></span></a>
+        <h3 class="panel-title">Item formats</h3>
+      </div>
+      <div class="panel-body">
+        <div id="formatresults"></div>
+      </div>
+      <div class="panel-footer"></div>
+    </div>
+
+    <div id="vennpanel" class="panel panel-default hideme">
+      <div class="panel-heading">
+        <a href="questionsandanswers.html#vennplanation" target="_qanda"><span class="question-prompt glyphicon glyphicon-question-sign"></span></a>
+        <h3 class="panel-title">Venn diagram</h3>
+      </div>
+      <div class="panel-body">
+        <div id="vennresults"></div>
+      </div>
+      <div class="panel-footer"></div>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="col-sm-12 col-md-6 col-lg-4">
+
+  <!--<div id="load-session" class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Load previous session</h3>
+    </div>
+    <div class="panel-body">
+      <button id="loadText" class="btn btn-default" title="Load a session from a saved file on this machine" data-toggle="modal" data-target="#load-text" type="button">Load from textfile</button>
+    </div>
+  </div>-->
+
+<div id="past" class="panel panel-default hideme">
+  <div class="panel-heading">
+    <h3 class="panel-title">Searches</h3>
+  </div>
+  <div id="searches" class="panel-body">
+  </div>
+</div>
+
+</div>
+
+
+</div>
+
+
+
+<div id="hedges-list" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="hedges-list">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Hedges</h4>
+      </div>
+      <div  class="modal-body">
+        <form id="hedges"></form>
+      </div>
+      <div class="modal-footer">
+        <span style="float: left;">Sources: <a href="https://www.ncbi.nlm.nih.gov/books/NBK3827/#pubmedhelp.Clinical_Queries_Filters" target="_blank">NLM</a>, <a href="https://hiru.mcmaster.ca/hiru/HIRU_Hedges_MEDLINE_Strategies.aspx"  target="_blank">HiRU</a></span>
+        <button type="button" id="hedge" class="btn btn-primary">Add Hedge</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="unique-records" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="unique-records">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Unique Records</h4>
+      </div>
+      <div id="uniques" class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="save-session" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="save-session">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Save this session</h4>
+      </div>
+      <div class="modal-body">
+        <p>You can save this session to return and work with it later.</p> <p>Choose to save it locally (only on this computer/browser) or to download it
+          as a text file.</p>
+        <a id="savemeText" href="" download="searchworkbench_session.txt" class="btn btn-success">Download session</a>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="save-local" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="save-local">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Save this session</h4>
+      </div>
+      <div class="modal-body">
+        <input type='text' name='sessionname' value="enter a name"><br />
+        <em>This session will only be saved on this browser and machine &ndash; choose "download session" to export it to another machine.</em>
+      </div>
+      <div class="modal-footer">
+        <button id="savelocally" type="button" class="btn btn-success">Save</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="load-local" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="load-local">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Load a saved session</h4>
+      </div>
+      <div class="modal-body">
+        <p>Choose a saved session from the following list:</p>
+        <div id="loadme"></div>
+        <br />
+        <button id="loadLocal" type="button" class="btn btn-success">Load this session</button>
+        <button id="deleteLocal" type="button" class="btn btn-danger">Delete</button>
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="load-text" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="load-text">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Load session from text file</h4>
+      </div>
+      <div class="modal-body">
+        <input type="file" id="input"  accept="text/plain">
+      </div>
+      <div class="modal-footer">
+        <button id="loadtextfile" type="button" class="btn btn-success">Load this session</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<p style='clear: both; margin-bottom: 60px;'></p>
+<br />
+
+<footer class="footer">
+  <div class="container">
+    <span class="text-muted">Design and contruction by <a href="https://esperr.github.io/about/">Ed Sperr, M.L.I.S.</a>  |
+      Data from <a href="http://www.ncbi.nlm.nih.gov/">NCBI</a>  |   Visualization tools from  <a href="https://developers.google.com/chart/interactive/docs/gallery/linechart" target="_blank">Google</a> and
+      <a href="https://github.com/benfred/venn.js/" target="_blank">Ben Frederickson</a>
+     | See the code at <a href="https://github.com/esperr/search-workbench">GitHub</a></span>
+  </div>
+</footer>
+
+
+<script>
+var searches = {};
+var pausetime = performance.now();
+var searchkey = 0;
+var LOCstem = "https://www.loc.gov/search/?q=";
+
+var formatwidth = $("#formatresults").innerWidth() * .9;
+var yearwidth = $("#yearresults").innerWidth() * .9;
+var vennwidth = $("#vennresults").innerWidth() * .9;
+
+//var myyearwidth = 500;
+//var myyearheight = 250;
+//if (yearwidth > myyearwidth) {
+//  myyearwidth = yearwidth;
+//  myyearheight = yearwidth*.50;
+//}
+$( "#yearresults" ).attr( "style", "min-width: " + yearwidth + "px;" );
+$( "#vennresults" ).attr( "style", "min-width: " + vennwidth + "px;" );
+
+//google.charts.load('current', {'packages':['line']});
+//trying standard
+//google.charts.load("current", {packages: ["corechart"]});
+google.charts.load('current', {packages: ['corechart', 'bar']});
+
+//function shareLinks(terms, type) {
+//  var vennlinkbase = "https://pubvenn.appspot.com/?";
+//  var yearlinkbase = "https://esperr.github.io/pubmed-by-year/?";
+//  var vennqstr = "";
+//  var yearqstr = "";
+//  if (terms.length == 1) {
+//    vennqstr = terms[0];
+//    yearqstr = "q1=" + terms[0];
+//  } else {
+//    for (i=0; i<terms.length; i++) {
+//      yearqstr += "q" + Number(i+1).toString() + "=" + terms[i];
+//      vennqstr += "(" + terms[i] + ")";
+//      if (i > -1 && i < terms.length-1) {
+//        vennqstr += " AND ";
+//        yearqstr += "&";
+//      }
+//    }
+//  }
+//  var yearshare = yearlinkbase + encodeURI(yearqstr);
+//  var vennshare = vennlinkbase + encodeURI(vennqstr);
+//  if (type == "venn") {
+//    $( "#vennpanel .panel-footer" ).append('<p id="vennshare" class="sharelink"><a href="' + vennshare + '" target="_blank">See more on PubVenn</a>')
+//  } else if (type == "year") {
+//    $( "#yearpanel .panel-footer" ).append('<p id="yearshare" class="sharelink"><a href="' + yearshare + '" target="_blank">See more on Pubmed by Year</a>')
+//  }
+//}
+
+(function() {
+
+//$('[data-toggle="tooltip"]').tooltip();
+
+//do hedges programatically
+
+//localSession stuff...
+if (storageAvailable('localStorage')) {
+  $( "#savemeText" ).before('<button id="savemeLocal" type="button" class="btn btn-success">Save locally</button> ');
+}
+
+getLocalsessions();
+
+function handlesearch() {
+  var term = $("#pmsearch").val();
+  if (!term) {
+    return;
+  }
+  dosearch(term);
+  }
+
+//Page actions and behaviors
+function showWait() {
+  $( "#pmsearch" ).prop( "disabled", true );
+  $( "#pmsearch").val("");
+  $( "#runsearch" ).prop( "disabled", true );
+  $( "form" ).addClass( "hideme" );
+  $( "#yearresults").empty();
+  $( "#yearresults" ).append("<div id='loading'><p class='text-center'>Grabbing your results &mdash; please wait</p></div>")
+  $( "#yearresults p" ).append( '<br /><img src="loading-bars.svg">' );
+  }
+
+function showDone() {
+  $( "#pmsearch" ).prop( "disabled", false );
+  $( "#runsearch" ).prop( "disabled", false );
+  $( "form" ).removeClass( "hideme" );
+  $( "#runsearch" ).removeClass( "hideme" );
+  //$("#loading").remove();
+  $("#fetchresults").remove();
+  }
+
+$( "#past" ).on( "click", ".pastsearchxxx", function() {
+  //while (sets.length) { sets.pop(); }
+  var searchIndex = $(this).data("searchIndex");
+  showCurrentSearch(searchIndex);
+  //console.log(JSON.stringify(searches[searchIndex].vennsets));
+  drawYearChart([searchIndex]);
+  //console.log(searches[searchIndex]);
+  if (searches[searchIndex].vennsets.length < 1) {
+    $("#vennresults").empty();
+    $("#vennresults").append('<p class="vennMsg">Only one valid term entered.</p>');
+  } else {
+    sets = searches[searchIndex].vennsets.slice(0);
+    drawVennDiagram();
+  }
+  });
+
+
+$( "#past" ).on( "click", "#showcompare", function() {
+    $("#past input[name='term']").toggle();
+    $("#showcompare").toggle();
+    $("#savebutton").toggle();
+    $("#past dl").after('<input id="compare" type="button" class="btn btn-primary" value="Compare" /><button id="closecompare" type="button" class="btn btn-default showsearches">Close</button>')
+    });
+
+$( "#past" ).on( "click", "#compare", function() {
+    var comparisons = [];
+    $( "input[name='term']" ).each(function( index ) {
+      if (this.checked) {
+          comparisons.push( $( this ).val() );
+        }
+      });
+      showComparisons(comparisons);
+      compVenn(comparisons);
+      //drawYearChart(comparisons);
+    });
+
+$( "#past" ).on( "click", ".showsearches", function() {
+    showSearches();
+    });
+
+$( ".row" ).on( "click", "#reset", function() {
+    location.replace(location.pathname);
+    });
+
+//Searching...
+function showSearches() {
+  $('#load-session').hide();
+  var maxheight = $(".row").first().height() * .8;
+  var searchname;
+  $( "#searches" ).empty();
+  $( "#past" ).removeClass( "hideme" );
+  $( "#searches" ).attr( 'style', 'max-height:' + maxheight + 'px' );
+
+  $( "#searches" ).append("<dl>");
+  for (var key in searches) {
+    if (searches.hasOwnProperty(key)) {
+      if (searches[key].nickname) {
+        searchname = '"' + searches[key].nickname + '"';
+      } else {
+        searchname =  searches[key].term;
+      }
+      $("#searches dl").append('<dt class="pastsearch"><input type="checkbox" name="term" id="' + key + '" value="' + key + '"> <a href="#!">' + searchname + "</a></dt>");
+      $("#searches dt").last().append(": " + searches[key].count );
+      $("#searches dt").last().data("searchIndex", key);
+    }
+  }
+  $("#past input[name='term']").toggle();
+  if ($("#searches dt").last().data("searchIndex") > 0) {
+    $("#searches dl").after('<input id="showcompare" type="button" class="btn btn-default" value="Compare searches" />');
+    $("#showcompare").after('<button id="savebutton" class="btn btn-default" data-toggle="modal" data-target="#save-session">Save session</button>');
+  }
+ }
+
+//...and displaying results
+function showCurrentSearch(searchkey) {
+  currentSearch = searches[searchkey];
+  $( "#breakdown" ).show();
+  $( "#breakdown" ).empty();
+  $( "#breakdown" ).append('<p id="yourterm">Your search:</p>');
+  $( "#yourterm" ).append("'" + currentSearch.term + "'");
+  var lcurl = LOCstem + encodeURI(currentSearch.term);
+  $( "#yourterm" ).append('<span id="count"> found <a href="' + lcurl + '" target="_pmresults">' + currentSearch.count + '</a> results</span>');
+  $( "#yourterm" ).append('&nbsp; <a href="' + lcurl +'" " target="_blank"><span class="glyphicon glyphicon-link"></span></a>');
+  $("#showedit").after(' &nbsp;&nbsp;<button id="deleteme" type="button" class="btn btn-danger">Delete this search</button>');
+}
+
+function showMultiFormats(searchkeys) {
+  var formatnames = ['Format'];
+  var mykey;
+  var mysearch;
+  var myformats;
+  for (m=0; m<searchkeys.length; m++) {
+      mysearch = searches[searchkeys[m]];
+      var myformats = mysearch.formatcounts;
+      for (i=0; i<myformats.length; i++) {
+        var formattest = formatnames.filter(obj => {
+          return obj.label === myformats[i].format;
+        });
+        if (formattest.length == 0) {
+          var formatObj = {label: myformats[i].format, type: 'number'};
+          formatnames.push(formatObj);
+        }
+      }
+  }
+  var countsarray = [formatnames];
+  for (m=0; m<searchkeys.length; m++) {
+      mysearch = searches[searchkeys[m]];
+      var formatcounts = [mysearch.term];
+      var myformats = mysearch.formatcounts;
+      for (i=1; i<formatnames.length; i++) {
+        var selectedformat = myformats.filter(obj => {
+          return obj.format === formatnames[i].label;
+        });
+        if (selectedformat.length > 0) {
+          formatcounts.push(selectedformat[0].count);
+        } else {
+          formatcounts.push("0");
+        }
+
+      }
+      countsarray.push(formatcounts);
+  }
+  var data = google.visualization.arrayToDataTable(countsarray);
+
+  var options = {
+  width: formatwidth,
+  height: formatwidth * 0.6,
+  legend: { position: 'top', maxLines: 3 },
+  bar: { groupWidth: '40%' },
+  isStacked: true
+  };
+  var chart = new google.visualization.BarChart(document.getElementById('formatresults'));
+
+  //Here comes the clicky bit...
+  function selectHandler() {
+    var selectedItem = chart.getSelection()[0];
+    if (selectedItem && selectedItem.row != null) {
+      term = data.getValue(selectedItem.row, 0);
+      format = formatnames[selectedItem.column].label;
+      var searchroot = getSearchRoot(format);
+      var locurl = searchroot + term;
+      window.open(locurl,'_formatsearch');
+     }
+  }
+
+  google.visualization.events.addListener(chart, 'select', selectHandler);
+  chart.draw(data, options);
+}
+
+
+//function showFormats(searchkey) {
+//  var myformats = searches[searchkey].formatcounts;
+//  var formatnames = ['Format'];
+//  var formatnumbers = [searches[searchkey].term]
+//  for (i=0; i<myformats.length; i++) {
+//    formatnames.push(myformats[i].format);
+//    formatnumbers.push(myformats[i].count);
+//  }
+//  var countsarray = [formatnames, formatnumbers];
+//  var data = google.visualization.arrayToDataTable(countsarray);
+
+//  var options = {
+//  width: 900,
+//  height: 300,
+//  legend: { position: 'top', maxLines: 3 },
+//  bar: { groupWidth: '75%' },
+//  isStacked: true
+//  };
+//  var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+//  chart.draw(data, options);
+//}
+
+
+function showComparisons(comparisons) {
+  $( "#breakdown" ).empty();
+  $( "#formatresults" ).empty();
+  showMultiFormats(comparisons);
+}
+
+
+ //If something goes wrong, we start over
+ function startOver() {
+   //$("#loading").remove();
+   alert("Something bad happened when we called the API...");
+   showDone();
+   }
+
+function dosearch(term) {
+  showWait();
+  pausetime = performance.now();
+  $.ajax({
+    url: 'https://www.loc.gov/search/',
+    error: function () {
+      startOver();
+      return;
+    },
+    data: {
+    all: 'true',
+    q: term,
+    fo: 'json'
+    },
+    success: function( data ) {
+      // check to see if we get an unusable response
+      if (!data.search) {
+        startOver();
+        return;
+      }
+      if (data.search.hits == "0") {
+        $("#breakdown").prepend('<div class="alert alert-danger" role="alert">Nothing found for "' + term + '"! Please try again...</div>');
+        showDone();
+        return;
+      } else {
+      var formatfacets = data.facets.filter(obj => {
+        return obj.type === "original-format";
+      });
+      var formats = formatfacets[0].filters
+      var formatcounts = [];
+      $.each( formats, function( key, value ) {
+        var format = { 'format': value.title, 'count': value.count };
+        formatcounts.push(format);
+      });
+      search = {
+        'term': term,
+        'count': data.search.hits,
+        'formatcounts': formatcounts
+      };
+      searches[searchkey] = search;
+
+      showDone();
+      showSearches();
+      showMultiFormats([searchkey]);
+      //showFormats(searchkey);
+      //var facets = data.facets;
+      $( ".sharelink" ).remove();
+      //yearsearch(searchkey, term);
+      startVenn(searchkey, term);
+      showCurrentSearch(searchkey);
+      searchkey++;
+      if (searchkey == 1) {
+        $( "#vennpanel" ).removeClass( "hideme" )
+        $( "#formatpanel" ).removeClass( "hideme" )
+        $("#charts").after('<button id="reset" type="button" style="float: right;" class="btn btn-danger">Reset All Searches</button>');
+        $('[data-toggle="popover"]').popover();
+      }
+      //showTranslation(data.esearchresult.querytranslation);
+      }
+    }
+  });
+}
+
+$("#runsearch").click(function(){
+    handlesearch();
+  });
+
+$(document).keypress(function(e) {
+if(e.which == 13) {
+    //Because both IE and FF now "helpfully" ignore the spec and treat 'button' the same as 'submit'
+    e.preventDefault();
+    handlesearch();
+  }
+});
+
+function getSearchRoot(format) {
+  var formatlabels = [
+    {formatlabel: "newspaper", rootpart: "newspapers" },
+    {formatlabel: "manuscript/mixed material", rootpart: "manuscripts" },
+    {formatlabel: "book", rootpart: "books" },
+    {formatlabel: "photo, print, drawing", rootpart: "photos" },
+    {formatlabel: "archived web site", rootpart: "websites" },
+    {formatlabel: "film, video", rootpart: "film-and-videos" },
+    {formatlabel: "sound recording", rootpart: "audio" },
+    {formatlabel: "map", rootpart: "maps" },
+    {formatlabel: "notated music", rootpart: "notated-music" },
+  ];
+  var selectedformat = formatlabels.filter(obj => {
+    return obj.formatlabel === format;
+  });
+  if (selectedformat.length > 0) {
+    var searchroot = "https://www.loc.gov/" + selectedformat[0].rootpart + "/?q=";
+  }
+
+  var origformatlabels = [
+    {formatlabel: "periodical", rootpart: "periodical" },
+    {formatlabel: "legislation", rootpart: "legislation" },
+    {formatlabel: "web page", rootpart: "web+page" },
+    {formatlabel: "event", rootpart: "event" },
+    {formatlabel: "personal narrative", rootpart: "personal+narrative" },
+    {formatlabel: "3d object", rootpart: "3d+object" },
+    {formatlabel: "software, e-resource", rootpart: "software,+e-resource" },
+  ];
+  var selectedorigformat = origformatlabels.filter(obj => {
+    return obj.formatlabel === format;
+  });
+  if (selectedorigformat.length > 0) {
+    var searchroot = "https://www.loc.gov/search/?fa=original-format:" + selectedorigformat[0].rootpart + "&q=";
+  }
+  return searchroot;
+}
+
+
+$( "#savemeLocal" ).click(function() {
+  //localStorage.setItem('session', JSON.stringify(searches));
+  $('#save-session').modal('hide');
+  $('#save-local').modal('show');
+});
+
+$( "#savelocally" ).click(function() {
+  var savekey = $("input[name='sessionname']").val();
+  localStorage.setItem(savekey, JSON.stringify(searches));
+  $('#save-local').modal('hide');
+});
+
+
+$( "#loadLocal" ).click(function() {
+  var selsession = $('input[name=savedsession]:checked').val();
+  searches = JSON.parse(localStorage.getItem(selsession));
+  $('#load-local').modal('hide');
+  var newIndex = 0;
+  for (index in searches) {
+    newIndex = index;
+  }
+  showSearches();
+  searchkey = newIndex + 1;
+  $( "#vennpanel" ).removeClass( "hideme" );
+  $( "#formatpanel" ).removeClass( "hideme" );
+});
+
+$( "#deleteLocal" ).click(function() {
+  var selsession = $('input[name=savedsession]:checked').val();
+  localStorage.removeItem(selsession);
+  $('#load-local').modal('hide');
+  $('#llocalbutton').remove();
+  getLocalsessions();
+});
+
+$( "#loadtextfile" ).click(function() {
+  var selectedFile = document.getElementById('input').files[0];
+  checkdate(selectedFile);
+  var r = new FileReader();
+  r.onload = function(event) {
+  // Why yes, this is a nested mess!
+    try {
+      (function () {
+        searches = JSON.parse(event.target.result);
+        var newIndex = 0;
+        for (index in searches) {
+          newIndex = index;
+        }
+        showSearches();
+        searchkey = newIndex + 1;
+      })();
+    } catch (e) {
+      alert("Unable to load search! Please try again...")
+    }
+  };
+  r.readAsText(selectedFile);
+  $( "#vennpanel" ).removeClass( "hideme" );
+  $( "#formatpanel" ).removeClass( "hideme" );
+  $('#load-text').modal('hide');
+});
+
+
+$( "#save-session" ).on('shown.bs.modal', function (e){
+      //alert("I want this to appear after the modal has opened!");
+      var dataurl ='data:text/plain;charset=utf-8,'
+            + encodeURIComponent(JSON.stringify(searches));
+      $("#savemeText").attr("href", dataurl);
+      });
+
+function storageAvailable(type) {
+    try {
+        var storage = window[type],
+            x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    }
+    catch(e) {
+        return e instanceof DOMException && (
+            // everything except Firefox
+            e.code === 22 ||
+            // Firefox
+            e.code === 1014 ||
+            // test name field too, because code might not be present
+            // everything except Firefox
+            e.name === 'QuotaExceededError' ||
+            // Firefox
+            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            // acknowledge QuotaExceededError only if there's something already stored
+            storage.length !== 0;
+    }
+}
+
+function getLocalsessions() {
+  $("#loadme").empty();
+  localSessions = [];
+  $.each(localStorage, function(key, value){
+     if (typeof localStorage[key] == "string") {
+       localSessions.push(key);
+      }
+    });
+
+  if (localSessions.length > 0) {
+    $( "#loadText" ).before('<button id="llocalbutton" class="btn btn-default" title="Tooltip on top" data-toggle="modal" data-target="#load-local">Load local</button>  ');
+    //$('[data-toggle="tooltip"]').tooltip();
+    for (i=0; i < localSessions.length; i++){
+      var myvalue = localSessions[i];
+      var myname = localSessions[i];
+      $("#loadme").append('<input type="radio" name="savedsession" value="' + myvalue + '"> ' + myname + '<br>');
+      }
+    $("input[name=savedsession]").prop("checked", true);
+  }
+}
+
+function checkdate(selectedFile) {
+  var now = new Date();
+  if ( selectedFile.lastModified ) {
+    var filedate = new Date(selectedFile.lastModified);
+  } else {
+    var filedate = new Date(selectedFile.lastModifiedDate);
+  }
+  var daysDiff = (Math.floor(now - filedate) / 86400000);
+  if (daysDiff > 30) {
+    alert("This saved session is more than 30 days old. Result counts may have changed.");
+  }
+}
+})
+
+();
+</script>
+
+</body>
+</html>
