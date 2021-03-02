@@ -1,4 +1,5 @@
 overlapcalls = 0;
+var totalsets = 0;
 var sets = [];
 var overlaps = [];
 var vennsearches = [];
@@ -9,6 +10,7 @@ var myOverlap;
 var mySet;
 var mySearch;
 var myIndex;
+var waitTime = 50;
 
 
    //display sharing link
@@ -47,7 +49,7 @@ function psearch(searchstr, callback) {
   function checktime() {
     var t1 = performance.now();
     var timediff = t1 - pausetime;
-    if (timediff > 100) {
+    if (timediff > waitTime) {
       callutils();
     } else {
       setTimeout(checktime, 30);
@@ -56,14 +58,15 @@ function psearch(searchstr, callback) {
 
   function callutils() {
     calltime = performance.now();
-    console.log(calltime - pausetime);
+    //console.log(calltime - pausetime);
     pausetime = calltime;
     $.ajax({
   	url: 'https://www.loc.gov/search/',
     error: function () {
-      startOver();
+      waitTime = waitTime+10;
+      psearch(searchstr, callback);
       //alert("Oops, something went wrong. Please try again!")
-      return;
+      //return;
     },
     data: {
     all: 'true',
@@ -80,8 +83,12 @@ function buildOLCounts(search) {
   psearch(search.terms, function( data ) {
     myOverlap = new setOverlapSet(search.sets,data.search.hits);
     sets.push(myOverlap);
-    if (!searches.length) {
-      drawVennDiagram ();
+    console.log("Sets: ");
+    console.log(sets.length);
+    console.log("Total Sets: ");
+    console.log(totalsets);
+    if (sets.length == totalsets) {
+      drawVennDiagram();
       writeSets();
       //drawPrintable ();
     }
@@ -102,7 +109,7 @@ function getOLCounts() {
   var progressProportion = 1/vennsearches.length;
   $("progress").attr("value", progressProportion*100);
 	if (vennsearches.length) {
-		setTimeout(getOLCounts, 300);
+		setTimeout(getOLCounts, 30);
 	} else {
     return;
 		}
@@ -121,7 +128,8 @@ for (index = 0; index < sets.length; index++) {
        }
    }
 
-var totalsets = vennsearches.length + sets.length;
+totalsets = vennsearches.length + sets.length;
+console.log(totalsets);
 getOLCounts();
 
 }
@@ -190,7 +198,7 @@ function startVenn(searchkey, term) {
 		//}
 		if (possibleTerms<2) {
 			$("#vennresults").empty();
-			$("#vennresults").append('<p class="vennMsg">Only one valid term entered.</p>');
+			$("#vennresults").append('<p class="vennMsg">Only one valid search term entered</p><p class="vennMsg">Use Boolean opeartors or <em>combine</em> multiple searches using the menu on the right to see a Venn diagram</p>');
       searches[myIndex].vennsets = [];
 		} else {
 			getSimpleSets(termsarray, possibleTerms);
@@ -246,11 +254,9 @@ function compVenn(comparisons) {
 
 function drawVennDiagram() {
 $("#vennresults").empty();
-var currentwidth = $("#vennresults").innerWidth();
-
 var chart = venn.VennDiagram()
-                 .width(currentwidth)
-                 .height(currentwidth);
+                 .width(vennwidth)
+                 .height(vennwidth);
 
 var div = d3.select("#vennresults")
 div.datum(sets).call(chart);

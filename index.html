@@ -3,6 +3,8 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   <title>Collection View</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link href="custom.css" rel="stylesheet" type="text/css">
@@ -33,6 +35,7 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
 
 <div id="topbanner" class="jumbotron">
   <h1>Collection View</h1>
+  <h2>Library of Congress</h2>
   <a id="about" class="label label-default" href="about.html">About Collection View</a>
 </div>
 
@@ -55,16 +58,11 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
 </div>
 
 <div id="breakdown">
-  <div id="splash">
-    <p>Search Workbench lets you easily examine, edit and visualize your <a href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> Searches. See
-      how the parts of your search overlap and observe how it performs over time.</p>
-      <p>Then <em>compare</em> your searches to another in order to zero-in on exactly the terms you want to use.
-      <em><a href="about.html">(more)</a></em></p>
-    </div>
+
 </div>
 
 <div id="charts">
-    <div id="formatpanel" class="panel panel-default hideme">
+    <div id="formatpanel" class="panel panel-default">
       <div class="panel-heading">
         <a href="questionsandanswers.html#yearplanation" target="_qanda"><span class="question-prompt glyphicon glyphicon-question-sign"></span></a>
         <h3 class="panel-title">Item formats</h3>
@@ -75,7 +73,7 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
       <div class="panel-footer"></div>
     </div>
 
-    <div id="vennpanel" class="panel panel-default hideme">
+    <div id="vennpanel" class="panel panel-default">
       <div class="panel-heading">
         <a href="questionsandanswers.html#vennplanation" target="_qanda"><span class="question-prompt glyphicon glyphicon-question-sign"></span></a>
         <h3 class="panel-title">Venn diagram</h3>
@@ -112,6 +110,45 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
 </div>
 
 
+</div>
+
+<div id="splash" class="col-sm-12 col-md-12 col-lg-10">
+  <div class="row">
+  <div class="col-sm-12 col-md-12 col-lg-12">
+  <p>Collection View helps you explore your library's collections (in this case, the <a href="https://www.loc.gov/">Library of Congress</a>) by graphically <em>summarizing</em> your search results. Enter any valid  <a href="https://www.loc.gov/help/search/">LoC
+    web search</a> and you'll see it presented in two ways.</p>
+  </div>
+ </div>
+  <div class="row">
+  <div class="col-sm-12 col-md-6 col-lg-5">
+    <p>Want to see what types of materials you can find for a given search? The number of items of each format found is represented by a compact visualization.
+    For example, here are the results for 'cows'.</p>
+  </div>
+  <div class="col-sm-12 col-md-6 col-lg-7">
+    <img src="cows.png" width="80%">
+  </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-5">
+    <p>Want to see how the parts of a complex search interact? Use <a href="https://www.youtube.com/watch?v=bCAULDuMcso">Boolean logic</a>, and you’ll get a Venn diagram in return.
+      For example, here are the results for 'death AND taxes'.<p>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-7">
+      <img src="death-and-taxes.png" width="80%">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+    <p>If you want to explore different search strategies, you can directly <em>compare</em> them to one another in order to zero-in on exactly the terms you want to use.
+      For example, here is the comparison between searches for 'popcorn' and 'popped corn'.<em><a href="about.html">(more)</a></em></p>
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      <img src="popcorn-comps-formats.png" style="float: left;" width=45%>
+      <img src="popcorn-comps-venn.png" style="float: left;" width=45%>
+    </div>
+  </div>
 </div>
 
 
@@ -230,6 +267,19 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
   </div>
 </div>
 
+<div id="waiting" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="load-text">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Please wait...</h4>
+      </div>
+      <div class="modal-body">
+        <img src="loading-bars.svg">
+      </div>
+    </div>
+  </div>
+</div>
+
 </div>
 
 <p style='clear: both; margin-bottom: 60px;'></p>
@@ -254,47 +304,13 @@ var LOCstem = "https://www.loc.gov/search/?q=";
 var formatwidth = $("#formatresults").innerWidth() * .9;
 var yearwidth = $("#yearresults").innerWidth() * .9;
 var vennwidth = $("#vennresults").innerWidth() * .9;
+$("#charts").hide();
 
-//var myyearwidth = 500;
-//var myyearheight = 250;
-//if (yearwidth > myyearwidth) {
-//  myyearwidth = yearwidth;
-//  myyearheight = yearwidth*.50;
-//}
 $( "#yearresults" ).attr( "style", "min-width: " + yearwidth + "px;" );
 $( "#vennresults" ).attr( "style", "min-width: " + vennwidth + "px;" );
 
-//google.charts.load('current', {'packages':['line']});
-//trying standard
-//google.charts.load("current", {packages: ["corechart"]});
 google.charts.load('current', {packages: ['corechart', 'bar']});
 
-//function shareLinks(terms, type) {
-//  var vennlinkbase = "https://pubvenn.appspot.com/?";
-//  var yearlinkbase = "https://esperr.github.io/pubmed-by-year/?";
-//  var vennqstr = "";
-//  var yearqstr = "";
-//  if (terms.length == 1) {
-//    vennqstr = terms[0];
-//    yearqstr = "q1=" + terms[0];
-//  } else {
-//    for (i=0; i<terms.length; i++) {
-//      yearqstr += "q" + Number(i+1).toString() + "=" + terms[i];
-//      vennqstr += "(" + terms[i] + ")";
-//      if (i > -1 && i < terms.length-1) {
-//        vennqstr += " AND ";
-//        yearqstr += "&";
-//      }
-//    }
-//  }
-//  var yearshare = yearlinkbase + encodeURI(yearqstr);
-//  var vennshare = vennlinkbase + encodeURI(vennqstr);
-//  if (type == "venn") {
-//    $( "#vennpanel .panel-footer" ).append('<p id="vennshare" class="sharelink"><a href="' + vennshare + '" target="_blank">See more on PubVenn</a>')
-//  } else if (type == "year") {
-//    $( "#yearpanel .panel-footer" ).append('<p id="yearshare" class="sharelink"><a href="' + yearshare + '" target="_blank">See more on Pubmed by Year</a>')
-//  }
-//}
 
 (function() {
 
@@ -322,31 +338,33 @@ function showWait() {
   $( "#pmsearch" ).prop( "disabled", true );
   $( "#pmsearch").val("");
   $( "#runsearch" ).prop( "disabled", true );
-  $( "form" ).addClass( "hideme" );
-  $( "#yearresults").empty();
-  $( "#yearresults" ).append("<div id='loading'><p class='text-center'>Grabbing your results &mdash; please wait</p></div>")
-  $( "#yearresults p" ).append( '<br /><img src="loading-bars.svg">' );
+  $('#waiting').modal('show');
+  //$( "form" ).addClass( "hideme" );
+  //$( "#yearresults").empty();
+  //$( "#yearresults" ).append("<div id='loading'><p class='text-center'>Grabbing your results &mdash; please wait</p></div>")
+  //$( "#yearresults p" ).append( '<br /><img src="loading-bars.svg">' );
   }
 
 function showDone() {
   $( "#pmsearch" ).prop( "disabled", false );
   $( "#runsearch" ).prop( "disabled", false );
-  $( "form" ).removeClass( "hideme" );
+  //$( "form" ).removeClass( "hideme" );
   $( "#runsearch" ).removeClass( "hideme" );
   //$("#loading").remove();
-  $("#fetchresults").remove();
+  //$("#fetchresults").remove();
+  $('#waiting').modal('hide');
   }
 
-$( "#past" ).on( "click", ".pastsearchxxx", function() {
+$( "#past" ).on( "click", ".pastsearch", function() {
   //while (sets.length) { sets.pop(); }
   var searchIndex = $(this).data("searchIndex");
   showCurrentSearch(searchIndex);
-  //console.log(JSON.stringify(searches[searchIndex].vennsets));
-  drawYearChart([searchIndex]);
+  showMultiFormats([searchIndex]);
+  //drawYearChart([searchIndex]);
   //console.log(searches[searchIndex]);
   if (searches[searchIndex].vennsets.length < 1) {
     $("#vennresults").empty();
-    $("#vennresults").append('<p class="vennMsg">Only one valid term entered.</p>');
+    $("#vennresults").append('<p class="vennMsg">Only one valid search term entered<br />To see a Venn diagram, use Boolean opeartors or <em>combine</em> searches using the menu on the right</p>');
   } else {
     sets = searches[searchIndex].vennsets.slice(0);
     drawVennDiagram();
@@ -406,7 +424,7 @@ function showSearches() {
   $("#past input[name='term']").toggle();
   if ($("#searches dt").last().data("searchIndex") > 0) {
     $("#searches dl").after('<input id="showcompare" type="button" class="btn btn-default" value="Compare searches" />');
-    $("#showcompare").after('<button id="savebutton" class="btn btn-default" data-toggle="modal" data-target="#save-session">Save session</button>');
+    //$("#showcompare").after('<button id="savebutton" class="btn btn-default" data-toggle="modal" data-target="#save-session">Save session</button>');
   }
  }
 
@@ -463,9 +481,9 @@ function showMultiFormats(searchkeys) {
 
   var options = {
   width: formatwidth,
-  height: formatwidth * 0.6,
+  height: (formatwidth * 0.3) * searchkeys.length,
   legend: { position: 'top', maxLines: 3 },
-  bar: { groupWidth: '40%' },
+  bar: { groupWidth: '60%' },
   isStacked: true
   };
   var chart = new google.visualization.BarChart(document.getElementById('formatresults'));
@@ -525,6 +543,8 @@ function showComparisons(comparisons) {
    }
 
 function dosearch(term) {
+  if (searchkey == 0) { $( "#charts" ).show(); }
+
   showWait();
   pausetime = performance.now();
   $.ajax({
@@ -576,8 +596,7 @@ function dosearch(term) {
       showCurrentSearch(searchkey);
       searchkey++;
       if (searchkey == 1) {
-        $( "#vennpanel" ).removeClass( "hideme" )
-        $( "#formatpanel" ).removeClass( "hideme" )
+        $( "#splash" ).hide();
         $("#charts").after('<button id="reset" type="button" style="float: right;" class="btn btn-danger">Reset All Searches</button>');
         $('[data-toggle="popover"]').popover();
       }
