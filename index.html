@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link href="custom.css" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
   <!-- Global Site Tag (gtag.js) - Google Analytics -->
   <script async src=""></script>
@@ -23,11 +23,13 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
 -->
 <body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="venn.js"></script>
 <script src="vennframework.js"></script>
+<script src="proportion-graph-framework.js"></script>
 <script src="yearframework.js"></script>
 
 
@@ -36,7 +38,7 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
 <div id="topbanner" class="jumbotron">
   <h1>Collection View</h1>
   <h2>Library of Congress</h2>
-  <a id="about" class="label label-default" href="about.html">About Collection View</a>
+  <a id="about" class="badge badge-pill badge-light" href="about.html">About Collection View</a>
 </div>
 
 <div class="row">
@@ -112,30 +114,46 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
 
 </div>
 
-<div id="splash" class="col-sm-12 col-md-12 col-lg-10">
-  <div class="row">
-  <div class="col-sm-12 col-md-12 col-lg-12">
-  <p>Collection View helps you explore your library's collections (in this case, the <a href="https://www.loc.gov/">Library of Congress</a>) by graphically <em>summarizing</em> your search results. Enter any valid  <a href="https://www.loc.gov/help/search/">LoC
-    web search</a> and you'll see it presented in two ways.</p>
-  </div>
- </div>
-  <div class="row">
-  <div class="col-sm-12 col-md-6 col-lg-5">
-    <p>Want to see what types of materials you can find for a given search? The number of items of each format found is represented by a compact visualization.
-    For example, here are the results for 'cows'.</p>
-  </div>
-  <div class="col-sm-12 col-md-6 col-lg-7">
-    <img src="cows.png" width="80%">
-  </div>
+<div id="splash" class="card mb-3">
+  <div class="card-body">
+    <div class="row">
+
+   <div class="col-6">
+    <div class="card">
+      <div class="card-body">
+        <p class="card-text">Collection View helps you explore your library's collections (in this case, the <a href="https://www.loc.gov/">Library of Congress</a>) by graphically <em>summarizing</em> your search results. Enter any valid  <a href="https://www.loc.gov/help/search/">LoC
+          web search</a> and you'll see it presented in two ways</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img class="card-img-top" src="death-and-taxes.png" alt="Venn diagram for 'death AND taxes'">
+      <div class="card-body">
+        <p class="card-text">Want to see how the parts of a complex search interact? Use <a href="https://www.youtube.com/watch?v=bCAULDuMcso">Boolean logic</a>, and you’ll get a Venn diagram in return.
+          For example, here are the results for 'death AND taxes'.</p>
+      </div>
+    </div>
+    </div>
+
+    <div class="col-6">
+    <div class="card">
+      <img class="card-img-top" src="cows.png" alt="Formats for 'cows'">
+      <div class="card-body">
+        <p class="card-text">Want to see what types of materials you can find for a given search? The number of items of each format found is represented by a compact visualization.
+        In this example, the results for 'cows'.</p>
+      </div>
+    </div>
   </div>
 
-  <div class="row">
+  <div class="col-sm-6">
+
+</div>
+
     <div class="col-sm-12 col-md-6 col-lg-5">
-    <p>Want to see how the parts of a complex search interact? Use <a href="https://www.youtube.com/watch?v=bCAULDuMcso">Boolean logic</a>, and you’ll get a Venn diagram in return.
-      For example, here are the results for 'death AND taxes'.<p>
+    <p><p>
     </div>
     <div class="col-sm-12 col-md-6 col-lg-7">
-      <img src="death-and-taxes.png" width="80%">
+      <img src="" width="80%">
     </div>
   </div>
 
@@ -149,6 +167,7 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
       <img src="popcorn-comps-venn.png" style="float: left;" width=45%>
     </div>
   </div>
+</div>
 </div>
 
 
@@ -300,6 +319,9 @@ var searches = {};
 var pausetime = performance.now();
 var searchkey = 0;
 var LOCstem = "https://www.loc.gov/search/?q=";
+var centurybaselines = [];
+var formatbaselines = [];
+
 
 var formatwidth = $("#formatresults").innerWidth() * .9;
 var yearwidth = $("#yearresults").innerWidth() * .9;
@@ -473,7 +495,6 @@ function showMultiFormats(searchkeys) {
         } else {
           formatcounts.push("0");
         }
-
       }
       countsarray.push(formatcounts);
   }
@@ -564,7 +585,8 @@ function dosearch(term) {
         startOver();
         return;
       }
-      if (data.search.hits == "0") {
+      var totalcount = data.search.hits;
+      if (totalcount == "0") {
         $("#breakdown").prepend('<div class="alert alert-danger" role="alert">Nothing found for "' + term + '"! Please try again...</div>');
         showDone();
         return;
@@ -575,13 +597,20 @@ function dosearch(term) {
       var formats = formatfacets[0].filters
       var formatcounts = [];
       $.each( formats, function( key, value ) {
-        var format = { 'format': value.title, 'count': value.count };
+        var mycount = value.count;
+        var mytitle = value.title;
+        //var mymatch = formatbaselines.filter(obj => {
+        //  return obj.format === mytitle;
+        //});
+        var proportion = mycount/totalcount;
+        var format = { 'format': mytitle, 'count': mycount, 'proportion': proportion };
+        console.log(format);
         formatcounts.push(format);
       });
       search = {
         'term': term,
         'count': data.search.hits,
-        'formatcounts': formatcounts
+        'formatcounts': formatcounts,
       };
       searches[searchkey] = search;
 
