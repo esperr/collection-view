@@ -30,7 +30,7 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
 <script src="venn.js"></script>
 <script src="vennframework.js"></script>
 <script src="proportion-graph-framework.js"></script>
-<script src="yearframework.js"></script>
+<!--<script src="yearframework.js"></script>-->
 
 
 <div class="container">
@@ -64,27 +64,35 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
 </div>
 
 <div id="charts">
-    <div id="formatpanel" class="panel panel-default">
-      <div class="panel-heading">
+    <div id="formatpanel" class="card mb-3">
+      <div class="card-header">
         <a href="questionsandanswers.html#yearplanation" target="_qanda"><span class="question-prompt glyphicon glyphicon-question-sign"></span></a>
-        <h3 class="panel-title">Item formats</h3>
+        Item formats
       </div>
-      <div class="panel-body">
+      <div class="card-body">
         <div id="formatresults"></div>
       </div>
-      <div class="panel-footer"></div>
     </div>
 
-    <div id="vennpanel" class="panel panel-default">
-      <div class="panel-heading">
-        <a href="questionsandanswers.html#vennplanation" target="_qanda"><span class="question-prompt glyphicon glyphicon-question-sign"></span></a>
-        <h3 class="panel-title">Venn diagram</h3>
+    <div class="card mb-3">
+      <div class="card-header">
+        Proportion of formats compared to those for entire collection
       </div>
-      <div class="panel-body">
+      <div class="card-body">
+        <div id="barchart_material"></div>
+      </div>
+    </div>
+
+    <div id="vennpanel" class="card mb-3">
+      <div class="card-header">
+        <a href="questionsandanswers.html#vennplanation" target="_qanda"><span class="question-prompt glyphicon glyphicon-question-sign"></span></a>
+        Venn diagram
+      </div>
+      <div class="card-body">
         <div id="vennresults"></div>
       </div>
-      <div class="panel-footer"></div>
     </div>
+
   </div>
 
 
@@ -520,7 +528,7 @@ function showMultiFormats(searchkeys) {
       window.open(locurl,'_formatsearch');
      }
   }
-
+  console.log(searches);
   google.visualization.events.addListener(chart, 'select', selectHandler);
   chart.draw(data, options);
 }
@@ -604,7 +612,6 @@ function dosearch(term) {
         //});
         var proportion = mycount/totalcount;
         var format = { 'format': mytitle, 'count': mycount, 'proportion': proportion };
-        console.log(format);
         formatcounts.push(format);
       });
       search = {
@@ -617,6 +624,7 @@ function dosearch(term) {
       showDone();
       showSearches();
       showMultiFormats([searchkey]);
+      showFormatBaselineComps([searchkey]);
       //showFormats(searchkey);
       //var facets = data.facets;
       $( ".sharelink" ).remove();
