@@ -51,12 +51,18 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
 
 <div id="left" class="col-sm-12 col-md-6 col-lg-8">
 
-<div id="search" class="input-group input-group-lg">
+<!--<div id="search" class="input-group input-group-lg">
   <input type="text" id="pmsearch" class="form-control">
   <span class="input-group-btn">
     <button id="runsearch" class="btn btn-primary" type="button">Search</button>
   </span>
+</div>-->
 
+<div id="search" class="input-group mb-3">
+  <input type="text" id="pmsearch" class="form-control">
+  <div class="input-group-append">
+    <button id="runsearch" class="btn btn-primary" type="button">Search</button>
+  </div>
 </div>
 
 <div id="breakdown">
@@ -74,14 +80,7 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
       </div>
     </div>
 
-    <div class="card mb-3">
-      <div class="card-header">
-        Proportion of formats compared to those for entire collection
-      </div>
-      <div class="card-body">
-        <div id="barchart_material"></div>
-      </div>
-    </div>
+
 
     <div id="vennpanel" class="card mb-3">
       <div class="card-header">
@@ -93,6 +92,23 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
       </div>
     </div>
 
+    <div class="card mb-3">
+      <div class="card-header">
+        Proportion of each format compared to entire collection
+      </div>
+      <div class="card-body">
+        <div id="format_proportions"></div>
+      </div>
+    </div>
+
+    <div class="card mb-3 min-vh-100">
+      <div class="card-header">
+        Proportion in each century compared to entire collection
+      </div>
+      <div class="card-body">
+        <div id="century_proportions"></div>
+      </div>
+    </div>
   </div>
 
 
@@ -109,9 +125,9 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
     </div>
   </div>-->
 
-<div id="past" class="panel panel-default hideme">
-  <div class="panel-heading">
-    <h3 class="panel-title">Searches</h3>
+<div id="past" class="card mb-3">
+  <div class="card-header">
+    Searches
   </div>
   <div id="searches" class="panel-body">
   </div>
@@ -127,14 +143,14 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
     <div class="row">
 
    <div class="col-6">
-    <div class="card">
+    <div class="card mb-3">
       <div class="card-body">
         <p class="card-text">Collection View helps you explore your library's collections (in this case, the <a href="https://www.loc.gov/">Library of Congress</a>) by graphically <em>summarizing</em> your search results. Enter any valid  <a href="https://www.loc.gov/help/search/">LoC
           web search</a> and you'll see it presented in two ways</p>
       </div>
     </div>
 
-    <div class="card">
+    <div class="card mb-3">
       <img class="card-img-top" src="death-and-taxes.png" alt="Venn diagram for 'death AND taxes'">
       <div class="card-body">
         <p class="card-text">Want to see how the parts of a complex search interact? Use <a href="https://www.youtube.com/watch?v=bCAULDuMcso">Boolean logic</a>, and you’ll get a Venn diagram in return.
@@ -144,11 +160,11 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
     </div>
 
     <div class="col-6">
-    <div class="card">
-      <img class="card-img-top" src="cows.png" alt="Formats for 'cows'">
+    <div class="card mb-3">
+      <img class="card-img-top" src="viruses.png" alt="Formats for 'viruses'">
       <div class="card-body">
         <p class="card-text">Want to see what types of materials you can find for a given search? The number of items of each format found is represented by a compact visualization.
-        In this example, the results for 'cows'.</p>
+        In this example, the results for 'viruses'.</p>
       </div>
     </div>
   </div>
@@ -335,6 +351,7 @@ var formatwidth = $("#formatresults").innerWidth() * .9;
 var yearwidth = $("#yearresults").innerWidth() * .9;
 var vennwidth = $("#vennresults").innerWidth() * .9;
 $("#charts").hide();
+$("#past").hide();
 
 $( "#yearresults" ).attr( "style", "min-width: " + yearwidth + "px;" );
 $( "#vennresults" ).attr( "style", "min-width: " + vennwidth + "px;" );
@@ -530,6 +547,9 @@ function showMultiFormats(searchkeys) {
   }
   console.log(searches);
   google.visualization.events.addListener(chart, 'select', selectHandler);
+  google.visualization.events.addListener(chart, 'ready', function () {
+    showDone();
+  });
   chart.draw(data, options);
 }
 
@@ -561,6 +581,8 @@ function showComparisons(comparisons) {
   $( "#breakdown" ).empty();
   $( "#formatresults" ).empty();
   showMultiFormats(comparisons);
+  showFormatBaselineComps(comparisons);
+  showCenturyBaselineComps(comparisons);
 }
 
 
@@ -572,75 +594,107 @@ function showComparisons(comparisons) {
    }
 
 function dosearch(term) {
-  if (searchkey == 0) { $( "#charts" ).show(); }
+  if (searchkey == 0) {
+    $( "#charts" ).show();
+    $( "#past" ).show();
+  }
 
   showWait();
   pausetime = performance.now();
-  $.ajax({
-    url: 'https://www.loc.gov/search/',
-    error: function () {
-      startOver();
-      return;
-    },
-    data: {
-    all: 'true',
-    q: term,
-    fo: 'json'
-    },
-    success: function( data ) {
-      // check to see if we get an unusable response
-      if (!data.search) {
+
+  checkbaselines();
+
+  function checkbaselines() {
+    if (centurybaselines.length > 0 && formatbaselines.length > 0) {
+      callsearch();
+    } else {
+      setTimeout(checkbaselines, 30);
+    }
+  }
+
+  function callsearch() {
+    $.ajax({
+      url: 'https://www.loc.gov/search/',
+      error: function () {
         startOver();
         return;
-      }
-      var totalcount = data.search.hits;
-      if (totalcount == "0") {
-        $("#breakdown").prepend('<div class="alert alert-danger" role="alert">Nothing found for "' + term + '"! Please try again...</div>');
-        showDone();
-        return;
-      } else {
-      var formatfacets = data.facets.filter(obj => {
-        return obj.type === "original-format";
-      });
-      var formats = formatfacets[0].filters
-      var formatcounts = [];
-      $.each( formats, function( key, value ) {
-        var mycount = value.count;
-        var mytitle = value.title;
-        //var mymatch = formatbaselines.filter(obj => {
-        //  return obj.format === mytitle;
-        //});
-        var proportion = mycount/totalcount;
-        var format = { 'format': mytitle, 'count': mycount, 'proportion': proportion };
-        formatcounts.push(format);
-      });
-      search = {
-        'term': term,
-        'count': data.search.hits,
-        'formatcounts': formatcounts,
-      };
-      searches[searchkey] = search;
+      },
+      data: {
+      all: 'true',
+      q: term,
+      fo: 'json'
+      },
+      success: function( data ) {
+        // check to see if we get an unusable response
+        if (!data.search) {
+          startOver();
+          return;
+        }
+        var totalcount = data.search.hits;
+        if (totalcount == "0") {
+          $("#breakdown").prepend('<div class="alert alert-danger" role="alert">Nothing found for "' + term + '"! Please try again...</div>');
+          showDone();
+          return;
+        } else {
 
-      showDone();
-      showSearches();
-      showMultiFormats([searchkey]);
-      showFormatBaselineComps([searchkey]);
-      //showFormats(searchkey);
-      //var facets = data.facets;
-      $( ".sharelink" ).remove();
-      //yearsearch(searchkey, term);
-      startVenn(searchkey, term);
-      showCurrentSearch(searchkey);
-      searchkey++;
-      if (searchkey == 1) {
-        $( "#splash" ).hide();
-        $("#charts").after('<button id="reset" type="button" style="float: right;" class="btn btn-danger">Reset All Searches</button>');
-        $('[data-toggle="popover"]').popover();
+        var formatfacets = data.facets.filter(obj => {
+          return obj.type === "original-format";
+        });
+        var formats = formatfacets[0].filters
+        var formatcounts = [];
+        $.each( formats, function( key, value ) {
+          var mycount = value.count;
+          var mytitle = value.title;
+          //var mymatch = formatbaselines.filter(obj => {
+          //  return obj.format === mytitle;
+          //});
+          var proportion = mycount/totalcount;
+          var format = { 'format': mytitle, 'count': mycount, 'proportion': proportion };
+          formatcounts.push(format);
+        });
+
+        var centuryfacets = data.facets.filter(obj => {
+          return obj.type === "dates";
+        });
+        var centuries = centuryfacets[0].filters
+        var centurycounts = [];
+        $.each( centuries, function( key, value ) {
+          var mycount = value.count;
+          var mytitle = value.title;
+          var proportion = mycount/totalcount;
+          var century = { 'century': mytitle, 'count': mycount, 'proportion': proportion };
+          centurycounts.push(century);
+        });
+        search = {
+          'term': term,
+          'count': data.search.hits,
+          'formatcounts': formatcounts,
+          'centurycounts': centurycounts,
+        };
+        searches[searchkey] = search;
+
+        //showDone();
+        showSearches();
+        showMultiFormats([searchkey]);
+        showFormatBaselineComps([searchkey]);
+        showCenturyBaselineComps([searchkey]);
+        //showFormats(searchkey);
+        //var facets = data.facets;
+        $( ".sharelink" ).remove();
+        //yearsearch(searchkey, term);
+        startVenn(searchkey, term);
+        showCurrentSearch(searchkey);
+        searchkey++;
+        if (searchkey == 1) {
+          $( "#splash" ).hide();
+          $("#charts").after('<button id="reset" type="button" style="float: right;" class="btn btn-danger">Reset All Searches</button>');
+          $('[data-toggle="popover"]').popover();
+        }
+        //showTranslation(data.esearchresult.querytranslation);
+        }
       }
-      //showTranslation(data.esearchresult.querytranslation);
-      }
-    }
-  });
+    });
+  }
 }
 
 $("#runsearch").click(function(){
