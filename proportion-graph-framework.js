@@ -36,27 +36,50 @@ function getbaselines() {
 }
 
 function showFormatBaselineComps(searchkeys) {
-  var formatProportionsArray = [['Format', 'Proportion',]];
-  var mysearch = searches[searchkeys[0]];
-  var myformats = mysearch.formatcounts;
-  $.each( myformats, function( i, formatitem ) {
-       format = formatitem.format;
-       baselinecomp = formatbaselines.filter(obj => {
-         return obj.format === formatitem.format;
-       });
-       comparison = formatitem.proportion - baselinecomp[0].proportion;
-       formatProportionsArray.push([format, comparison]);
-       });
+  var allformats = [];
+  var formatProportionsArray =  [['Format']];
+  //grab all our search terms and formats first
+  for (i = 0; i < searchkeys.length; i++) {
+    var searchterm = searches[searchkeys[i]].term;
+    formatProportionsArray[0].push(searchterm);
+    var formatcounts = searches[searchkeys[i]].formatcounts;
+    for (c = 0; c < formatcounts.length; c++) {
+      if(allformats.indexOf(formatcounts[c].format) === -1){
+        allformats.push(formatcounts[c].format);
+      }
+    }
+  }
+  allformats.sort();
 
+  for (i=0; i<allformats.length; i++) {
+    var formatvalues = [];
+    formatvalues.push(allformats[i]);
+    for (m=0; m<searchkeys.length; m++) {
+      var mysearchformat = searches[searchkeys[m]].formatcounts.filter(obj => {
+        return obj.format === allformats[i];
+      });
+      baselinecomp = formatbaselines.filter(obj => {
+        return obj.format === allformats[i];
+      });
+      if (typeof mysearchformat[0] !== "undefined") {
+        var mycomparison = mysearchformat[0].proportion - baselinecomp[0].proportion;
+      } else {
+        var mycomparison = 0;
+      }
+      console.log(mycomparison);
+      formatvalues.push(mycomparison);
+    }
+    formatProportionsArray.push(formatvalues);
+  }
+  console.log(searches);
   var formatProportionsData = google.visualization.arrayToDataTable( formatProportionsArray );
-  //var formatPropChart = new google.visualization.BarChart(document.getElementById('formatproportionresults'));
-
+  var chartheight = (formatProportionsArray.length * 20) * searchkeys.length;
+  if (chartheight < 120) { chartheight = 120}
   var formatPropOptions = {
           bars: 'horizontal',
-          height: formatProportionsArray.length * 20,
+          height: chartheight,
           //width: mywidth,
           fontName: 'sans-serif',
-          legend: { position: 'none' },
 
          hAxis: {
            title: 'Proportion',
@@ -72,8 +95,72 @@ function showFormatBaselineComps(searchkeys) {
          }
        };
 
-               var chart = new google.charts.Bar(document.getElementById('barchart_material'));
+               var chart = new google.charts.Bar(document.getElementById('format_proportions'));
                chart.draw(formatProportionsData, google.charts.Bar.convertOptions(formatPropOptions));
+
+}
+
+function showCenturyBaselineComps(searchkeys) {
+  var allcenturies = [];
+  var centuryProportionsArray =  [['Century']];
+  //grab all our search terms and centuries first
+  for (i = 0; i < searchkeys.length; i++) {
+    var searchterm = searches[searchkeys[i]].term;
+    centuryProportionsArray[0].push(searchterm);
+    var centurycounts = searches[searchkeys[i]].centurycounts;
+    for (c = 0; c < centurycounts.length; c++) {
+      if(allcenturies.indexOf(centurycounts[c].century) === -1){
+        allcenturies.push(centurycounts[c].century);
+      }
+    }
+  }
+
+  for (i=0; i<allcenturies.length; i++) {
+    var centuryvalues = [];
+    centuryvalues.push(allcenturies[i]);
+    for (m=0; m<searchkeys.length; m++) {
+      var mysearchcentury = searches[searchkeys[m]].centurycounts.filter(obj => {
+        return obj.century === allcenturies[i];
+      });
+      baselinecomp = centurybaselines.filter(obj => {
+        return obj.century === allcenturies[i];
+      });
+      if (typeof mysearchcentury[0] !== "undefined") {
+        var mycomparison = mysearchcentury[0].proportion - baselinecomp[0].proportion;
+      } else {
+        var mycomparison = 0;
+      }
+      console.log(mycomparison);
+      centuryvalues.push(mycomparison);
+    }
+    centuryProportionsArray.push(centuryvalues);
+  }
+  console.log(centuryProportionsArray);
+  var centuryProportionsData = google.visualization.arrayToDataTable( centuryProportionsArray );
+  var chartheight = (centuryProportionsArray.length * 25) * searchkeys.length;
+  if (centuryProportionsArray < 5) { chartheight = 130 }
+  var centuryPropOptions = {
+          bars: 'horizontal',
+          height: chartheight,
+          //width: mywidth,
+          fontName: 'sans-serif',
+
+         hAxis: {
+           title: 'Proportion',
+           maxValue: .7,
+           minValue: -.7,
+           viewWindow: {
+             max: .9,
+             min: -.9
+           }
+         },
+         vAxis: {
+           title: 'Format'
+         }
+       };
+
+               var chart = new google.charts.Bar(document.getElementById('century_proportions'));
+               chart.draw(centuryProportionsData, google.charts.Bar.convertOptions(centuryPropOptions));
 
 }
 
