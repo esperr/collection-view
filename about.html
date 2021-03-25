@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="custom.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
-<title>About Search Workbench</title>
+<title>About Collection View</title>
 <style>
 img {
   padding: 1em;
@@ -26,91 +26,68 @@ img {
 <div class="container">
 <div id="topbanner" class="jumbotron">
 	<h1>About Collection View</h1>
-	<a id="about" class="label label-default" href="index.html">Home</a>
+	<a id="about" class="badge badge-pill badge-light" href="index.html">Home</a>
 </div>
    <div class="row">
 
 <div class="col-sm-7 col-md-7 col-lg-7 aboutleft">
-	<div class="panel panel-default">
-	<div class="panel-body">
+	<div class="card mb-3">
+	<div class="card-body">
 		<h2>Why Collection View?</h2>
-    <p>Collection View is in part an extension of my workn <a href="https://esperr.github.io/visualizingpubmed/">
-      Visualizing PubMed</a>. Like those projects, Collection View allows you to examine, edit and visualize your searches so that you can get a better sense of what they are doing.
+    <p>Collection View is in part an extension of my work on <a href="https://searchworkbench.info/">
+      Search Workbench</a>. Just as that project enables one to visualize PubMed results, Collection View
+      allows you to visualize your
+      Library of Congress searches so that you can get a better sense of what they are doing.
       Importantly, you can also directly <em>compare</em> searches to one another &mdash;
       facilitating the process of fine-tuning a search strategy.</p>
 
     <h2>How it works</h2>
+    <p>Collection View <em>summarizes</em> your search results by plotting them on a couple of different
+       data visualizations. In the first, raw numbers for each format are visualized as a stacked bar graph.
+     In the second, searches using <a href="https://www.youtube.com/watch?v=bCAULDuMcso">Boolean logic</a> are
+     visualized using a Venn diagram. This view is also available when you're comparing multiple searches.
+      Finally, the <em>proportions</em> of items in your search for each format and each century are compared
+     to the baselines for the collection as a whole.</p>
 
-    <p>When you enter a search, it is run against PubMed using the <a href="https://www.ncbi.nlm.nih.gov/books/NBK25501/">programmatic interface</a> maintained by the <a href="https://www.ncbi.nlm.nih.gov/">National Center for Biotechnology Information</a>. You first see how your search
-      is translated by <a href="https://www.nlm.nih.gov/bsd/disted/pubmedtutorial/020_040.html">Automated Term Mapping</a>. Then you see how the parts of your search relate to one another (using the logic that drives <a href="https://pubvenn.appspot.com/">PubVenn</a>) and how that search performs over time
-      (via <a href="https://esperr.github.io/pubmed-by-year/">PubMed-by-year</a>).</p>
-
-    <h3 id="editing">Editing a search</h3>
-    <p>Once your search is complete, you can choose to edit it by hand. You can add or subtract terms, Boolean operators and parentheses as well as apply one of several pre-defined search hedges.
-    <em>Note:</em> there is no validation of this edited search before you run it, so beware of typos, unmatched parentheses and field tags that don't fit.</p>
-
-    <h3 id="nicknames">Search nicknames</h3>
-    <p>If you directly edit a PubMed <a href="https://www.nlm.nih.gov/bsd/disted/pubmedtutorial/020_040.html">translation</a>, you'll notice that even simple searches, such as "diabetes and heart disease", quickly turn into something a bit more ungainly:</p>
-      <blockquote style="font-size: 90%;">
-        ("diabetes mellitus"[MeSH Terms] OR ("diabetes"[All Fields] AND "mellitus"[All Fields]) OR "diabetes mellitus"[All Fields] OR "diabetes"[All Fields] OR "diabetes insipidus"[MeSH Terms] OR ("diabetes"[All Fields] AND "insipidus"[All Fields]) OR "diabetes insipidus"[All Fields]) AND ("heart diseases"[MeSH Terms] OR ("heart"[All Fields] AND "diseases"[All Fields]) OR "heart diseases"[All Fields] OR ("heart"[All Fields] AND "disease"[All Fields]) OR "heart disease"[All Fields])
-      </blockquote>
-      <img src="nickname.PNG" alt="screenshot snippet" />
-      <p>Using such long strings as search labels makes it difficult to see slight variations in a search. It also makes comparing them on a chart cumbersome.</p>
-      <p>In these cases, please take advantage of the ability to <em>nickname</em> a search. Choose a name, click "add", and you'll use that nickname for that search going forward
-      </p>
-
-
-
-    <h3 id="managing">Managing and comparing searches</h3>
-    <img src="comp1.PNG" alt="screenshot snippet" />
-
-    <p>Once you have two or more searches, you can easily compare them using the tools found underneath "Searches".</p>
-
-    <p>Choose the searches you want to compare from a list of ones already performed and select "Compare searches" &mdash; you will then see that comparison diagrammed using the same chart-by-year and Venn diagrams seen at the outset.
-    <em>Note:</em> you can choose as many searches to compare as are needed, though the diagrams can get more cluttered.</p>
-    <img src="comp2.PNG" alt="screenshot snippet" />
-
-    <p>Importantly, you can easily review (or nickname, or delete) any past search by choosing it from the list. Choosing </p>
-    <br style="clear: both;"/>
-    <h3 id="saving">Saving or retrieving a session</h3>
-    <p>If you want to save a session for later, you have the option of saving it locally or to a text file. Local sessions are more convenient to work with, but they are <em>only</em> accessible on the browser/machine where you created them. Text files can be used on any machine (and by any user) that can read them.</p>
-    <p>You will note the "Load previous session" buttons when you start a session. Just choose the locally saved session (or text file) you want, and you can resume where you left off.</p>
-
-    <h3 id="uniques">Seeing unique records</h3>
-    <p>When you are comparing two or more searches, you can choose "Show unique records" to show those citations that show up in one search, but not in any of the others you are comparing at that moment.</p>
-
-    <p>If you have more questions, check out <a href="questionsandanswers.html">the Q&A</a>.</p>
+     <p>For more details, check out my talk at <a href="https://2021.code4lib.org/talks/Looking-Beyond-the-List-Enhancing-Search-with-Interactive-Visualizations">Code4Lib 2021</a>. Slides at
+     <a href="https://osf.io/acm3q/">osf.io</a>. Video on <a href="https://www.youtube.com/watch?v=QC_R2IkYzao">YouTube</a>.</p>
 	</div>
 	</div>
+
+  <div class="card mb-3">
+	   <div class="card-body">
+       <h3>Technologies</h3>
+       <p>PubMed by Year is put together with <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">JavaScript</a> and <a href="http://jquery.com/">jQuery</a>. Search results are fetched with the Library of Congress's <a href="https://libraryofcongress.github.io/data-exploration/">
+         API</a>. </p>
+         <p><a href="https://developers.google.com/chart/interactive/docs/gallery/linechart">Google Charts</a> is used to draw the line charts, and Ben Fredrickson's <a href="https://github.com/benfred/venn.js/tree/master">venn.js</a> overlay of Mike Bostock's <a href="https://d3js.org/">d3.js</a>
+         performs the set visualization. Responsive layout is made easier with <a href="http://getbootstrap.com/">Bootstrap</a>.</p>
+       <p>You can find the source code for this application at <a href="https://github.com/esperr/collection-view">GitHub</a>.</p>
+
+     </div>
+  </div>
+
 </div>
 
 <div class="col-sm-5 col-md-5 col-lg-5">
- <div class="panel panel-default">
-<div class="panel-body">
+ <div class="card mb-3">
+<div class="card-body">
 <h3>Contact</h3>
 <p>PubMed by Year is a project of <a href="https://esperr.github.io/about/">Ed Sperr, M.L.I.S.</a></p>
 <p>Ed can be reached at <a href="mailto:ed_sperr@hotmail.com">ed_sperr@hotmail.com</a> or <a href="mailto:esperr@uga.edu">esperr@uga.edu</a>. Please feel free to reach out with any comments or enhancement requests!</p>
       </div>
    </div>
 
-	<div class="panel panel-default">
-	<div class="panel-body">
-  	<h3>Technologies</h3>
-		<p>PubMed by Year is put together with <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">JavaScript</a> and <a href="http://jquery.com/">jQuery</a>. Search translations and counts are fetched with NCBI's <a href="https://www.ncbi.nlm.nih.gov/books/NBK25501/">
-      Entrez Programming Utilities</a>. NCBI does not yet have an easy way to grab by-year counts for a search (short of launching 50+ calls to the API), so a <a href="https://github.com/esperr/med-by-year">custom webservice</a>
-      is used.</p>
-      <p><a href="https://developers.google.com/chart/interactive/docs/gallery/linechart">Google Charts</a> is used to draw the line charts, and Ben Fredrickson's <a href="https://github.com/benfred/venn.js/tree/master">venn.js</a> overlay of Mike Bostock's <a href="https://d3js.org/">d3.js</a>
-      performs the set visualization. Responsive layout is made easier with <a href="http://getbootstrap.com/">Bootstrap</a>.</p>
-    <p>You can find the source code for this application at <a href="https://github.com/esperr/search-workbench">GitHub</a>.</p>
+	<div class="card mb-3">
+	<div class="card-body">
 
     <h3>License</h3>
-    <p>Copyright 2017, Ed Sperr. This software is provided under the terms of the <a href="https://opensource.org/licenses/MIT">MIT License</a>. Feel free to borrow/adapt <a href="https://github.com/esperr/search-workbench">the source code</a> as you wish, but be aware that things strictly adhere
+    <p>Copyright 2021, Ed Sperr. This software is provided under the terms of the <a href="https://opensource.org/licenses/MIT">MIT License</a>. Feel free to borrow/adapt <a href="https://github.com/esperr/search-workbench">the source code</a> as you wish, but be aware that things strictly adhere
       to the XKCD <a href="https://xkcd.com/1513/">Code</a> <a href="https://xkcd.com/1695/">Quality</a> <a href="https://xkcd.com/1833/">Guidelines</a>.</p>
-		<p>Please note that the information provided here comes ultimately from the <a href="http://www.ncbi.nlm.nih.gov/">National Center for Biotechnology Information</a> and is subject to the terms listed under their
-		<a href="https://www.ncbi.nlm.nih.gov/home/about/policies/">Disclaimer and Copyright notice</a>.</p>
-    <p>Feel free to use this tool as you wish, but if you use Search Workbench for publication, I'd appreciate a citation:
+		<p>Please note that the information provided here comes ultimately from the <a href="https://www.loc.gov/">Library of Congress</a> and is subject to use according to their
+		<a href="https://www.loc.gov/legal/">Legal terms and policies</a>.</p>
+    <p>Feel free to use this tool as you wish, but if you use Collection View for publication, I'd appreciate a citation:
     </p><blockquote>
-        Sperr E. Search Workbench [Internet]. 2017 [cited <em>your_date_here</em>]. Available from https://searchworkbench.info/
+        Sperr E. Collection View [Internet]. 2021 [cited <em>your_date_here</em>]. Available from https://esperr.github.io/collection-view/
       </blockquote>
 
 
@@ -119,11 +96,11 @@ img {
 
 
 
-  <div class="panel panel-default">
-  <div class="panel-body">
+  <div class="card mb-5">
+  <div class="card-body">
     <h2>See also...</h2>
-    <p>Want to have even more fun with MEDLINE visualizations? Check out the full versions of PubVenn and
-      PubMed by Year as well as other cool tools at <a href="https://esperr.github.io/visualizingpubmed/">
+    <p>Curious about how these techniques can be used for other databases? Check out the PubVenn,
+      PubMed by Year and other cool tools at <a href="https://esperr.github.io/visualizingpubmed/">
         Visualizing PubMed</a>.</p>
   </div>
   </div>

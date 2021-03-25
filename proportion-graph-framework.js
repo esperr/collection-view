@@ -66,7 +66,6 @@ function showFormatBaselineComps(searchkeys) {
       } else {
         var mycomparison = 0;
       }
-      console.log(mycomparison);
       formatvalues.push(mycomparison);
     }
     formatProportionsArray.push(formatvalues);
@@ -95,8 +94,25 @@ function showFormatBaselineComps(searchkeys) {
          }
        };
 
-               var chart = new google.charts.Bar(document.getElementById('format_proportions'));
-               chart.draw(formatProportionsData, google.charts.Bar.convertOptions(formatPropOptions));
+       var chart = new google.charts.Bar(document.getElementById('format_proportions'));
+       //Here comes the clicky bit...
+       function selectHandler() {
+         var selectedItem = chart.getSelection()[0];
+         if (selectedItem && selectedItem.row != null) {
+           console.log(selectedItem);
+           var format = formatProportionsData.getValue(selectedItem.row, 0);
+           console.log(format);
+           var term = formatProportionsData.getColumnLabel(selectedItem.column);
+           console.log(term);
+           var searchroot = getSearchRoot(format);
+           var locurl = searchroot + term;
+           window.open(locurl,'_formatsearch');
+          }
+       }
+       console.log(searches);
+       google.visualization.events.addListener(chart, 'select', selectHandler);
+
+       chart.draw(formatProportionsData, google.charts.Bar.convertOptions(formatPropOptions));
 
 }
 
@@ -130,7 +146,6 @@ function showCenturyBaselineComps(searchkeys) {
       } else {
         var mycomparison = 0;
       }
-      console.log(mycomparison);
       centuryvalues.push(mycomparison);
     }
     centuryProportionsArray.push(centuryvalues);
@@ -159,135 +174,59 @@ function showCenturyBaselineComps(searchkeys) {
          }
        };
 
-               var chart = new google.charts.Bar(document.getElementById('century_proportions'));
-               chart.draw(centuryProportionsData, google.charts.Bar.convertOptions(centuryPropOptions));
+       var chart = new google.charts.Bar(document.getElementById('century_proportions'));
+       //Here comes the clicky bit...
+       function selectHandler() {
+         var selectedItem = chart.getSelection()[0];
+         if (selectedItem && selectedItem.row != null) {
+           console.log(selectedItem);
+           var century = centuryProportionsData.getValue(selectedItem.row, 0);
+           var term = centuryProportionsData.getColumnLabel(selectedItem.column);
+           var centurysearchpart = century.replace(" to ", "/");
+           console.log(centurysearchpart);
+           var searchroot = "https://www.loc.gov/search/?dates="
+           var locurl = searchroot + centurysearchpart + "&q=" + term;
+           window.open(locurl,'_datesearch');
+          }
+       }
+       google.visualization.events.addListener(chart, 'select', selectHandler);
+       chart.draw(centuryProportionsData, google.charts.Bar.convertOptions(centuryPropOptions));
 
 }
 
-function displayCounts(searchIndex) {
-  var percentArray =  [['Subheading', 'Your search percentage', 'Percentage for all records in MEDLINE']];
-  var proportionsArray = [['Subheading', 'Proportion',]];
-  showDone();
-  if(typeof searchIndex == 'undefined') {
-    var searchIndex = searches.length - 1;
-  }
-  if (searchIndex < 1) {
-    return;
-  }
-  showSearches();
-  $( "#chart_div" ).empty();
-  total = Number(searches[searchIndex].count);
-  //if total == 0 {
-  //  $( "#chart_div" ).append('<div class="alert alert-danger" role="alert">Nothing found for this search. Please try again</div>.');
-  //  return;
-//  }
-  categories = searches[searchIndex].categories;
-  categories = keysrt(categories, 'category');
-  $( "#chart_div" ).prepend( "<div class='proportionchart panel panel-default'>" );
-  $( "#chart_div" ).prepend( "<div class='percentagechart panel panel-default'>" );
-  $( "#chart_div" ).prepend( '<h3>Your search for "' + searches[searchIndex].term + '" returned ' + total + " results</h3>" );
-  origcategories = keysrt(searches[0].categories, 'category');
-  $.each( categories, function( i, catitem ) {
-       category = catitem.category;
-       origpercent = origcategories[i].proportion;
-       percent =  catitem.proportion;
-       comparison = catitem.proportion - origcategories[i].proportion;
-       proportionsArray.push([category, comparison]);
-       percentArray.push([category, percent, origpercent]);
-       });
-   var percentOptions = {
-       chartArea: {left:20,top:0,width:'50%',height:'75%'},
-       chart: {
-         title: 'Percentage of results of subjects with a given subheading for "' + searches[searchIndex].term + '"'
-              },
-       height: myheight,
-       width: mywidth,
-       fontName: 'sans-serif',
-       hAxis: {
-         title: 'Percentage',
-         format: 'percent',
-         minValue: 0,
-           },
-      legend: { position: 'none' },
-       vAxis: {
-         title: 'Subheading'
-         },
-       bars: 'horizontal'
-      };
-
-      var compareoptions = {
-              bars: 'horizontal',
-              height: myheight,
-              width: mywidth,
-              fontName: 'sans-serif',
-              legend: { position: 'none' },
-
-             title: 'Proportion of subheadings for "' + searches[searchIndex].term + '" compared to baseline',
-             hAxis: {
-               title: 'Proportion',
-               maxValue: .5,
-               minValue: -.5,
-               viewWindow: {
-                 max: .6,
-                 min: -.6
-               }
-             },
-             vAxis: {
-               title: 'Subheading'
-             }
-           };
-
-  var perdata = google.visualization.arrayToDataTable( percentArray );
-  var myPNodes = document.getElementsByClassName("percentagechart");
-  var myPNode = myPNodes[0];
-  var perchart = new google.charts.Bar( myPNode );
-  google.visualization.events.addListener(perchart, 'select', pselect);
-  perchart.draw(perdata, google.charts.Bar.convertOptions(percentOptions));
-  $(".percentagechart").prepend('<div id="percentkey"><span style="color: #4285F4">Your search</span><br /><span style="color: #DB4437;">All MEDLINE</span></div>');
-  $(".percentagechart").append('<a href="#!" class="printMe">Printable version</a></dt>');
-  $(".printMe").first().data("type", "percentage");
-
-  var compdata = google.visualization.arrayToDataTable( proportionsArray );
-  var myCNodes = document.getElementsByClassName("proportionchart");
-  var myCNode = myCNodes[0];
-  var chart = new google.charts.Bar( myCNode );
-  google.visualization.events.addListener(chart, 'select', cselect);
-  chart.draw(compdata, google.charts.Bar.convertOptions(compareoptions));
-  $(".proportionchart").append('<a href="#!" class="printMe">Printable version</a></dt>');
-  $(".proportionchart").after('<br /><br /><br />');
-  $(".printMe").last().data("type", "proportion");
-
-  //var viewBox="0 0 700 400";
-  //var resizeMe = document.getElementsByTagName("svg")[0];
-  //console.log(resizeMe);
-  //resizeMe.setAttributeNS(null,"viewBox",viewBox);
-  //resizeMe.removeAttributeNS(null,"width");
-  //resizeMe.removeAttributeNS(null,"height");
-
-  function pselect() {
-    selectedItem = perchart.getSelection()[0];
-    if (selectedItem) {
-      var resultsURL = 'https://www.ncbi.nlm.nih.gov/pubmed/';
-      var pmCategory = compdata.getValue(selectedItem.row, 0);
-      if (selectedItem.column == 1) {
-        resultsURL = resultsURL + '?term=medline[sb]+AND+' + searches[searchIndex].term + '+AND+' + pmCategory + '[sh]';
-      } else {
-        resultsURL = resultsURL + '?term=medline[sb]+AND+' + pmCategory + '[sh]';
-      }
-      encodeURI(resultsURL);
-      window.open(resultsURL,'_blank');
-    }
+function getSearchRoot(format) {
+  var formatlabels = [
+    {formatlabel: "newspaper", rootpart: "newspapers" },
+    {formatlabel: "manuscript/mixed material", rootpart: "manuscripts" },
+    {formatlabel: "book", rootpart: "books" },
+    {formatlabel: "photo, print, drawing", rootpart: "photos" },
+    {formatlabel: "archived web site", rootpart: "websites" },
+    {formatlabel: "film, video", rootpart: "film-and-videos" },
+    {formatlabel: "sound recording", rootpart: "audio" },
+    {formatlabel: "map", rootpart: "maps" },
+    {formatlabel: "notated music", rootpart: "notated-music" },
+  ];
+  var selectedformat = formatlabels.filter(obj => {
+    return obj.formatlabel === format;
+  });
+  if (selectedformat.length > 0) {
+    var searchroot = "https://www.loc.gov/" + selectedformat[0].rootpart + "/?q=";
   }
 
-  function cselect() {
-    selectedItem = chart.getSelection()[0];
-    if (selectedItem) {
-      var resultsURL = 'https://www.ncbi.nlm.nih.gov/pubmed/';
-      var pmCategory = compdata.getValue(selectedItem.row, 0);
-      resultsURL = resultsURL + '?term=medline[sb]+AND+' + searches[searchIndex].term + '+AND+' + pmCategory + '[sh]';
-      encodeURI(resultsURL);
-      window.open(resultsURL,'_blank');
-    }
+  var origformatlabels = [
+    {formatlabel: "periodical", rootpart: "periodical" },
+    {formatlabel: "legislation", rootpart: "legislation" },
+    {formatlabel: "web page", rootpart: "web+page" },
+    {formatlabel: "event", rootpart: "event" },
+    {formatlabel: "personal narrative", rootpart: "personal+narrative" },
+    {formatlabel: "3d object", rootpart: "3d+object" },
+    {formatlabel: "software, e-resource", rootpart: "software,+e-resource" },
+  ];
+  var selectedorigformat = origformatlabels.filter(obj => {
+    return obj.formatlabel === format;
+  });
+  if (selectedorigformat.length > 0) {
+    var searchroot = "https://www.loc.gov/search/?fa=original-format:" + selectedorigformat[0].rootpart + "&q=";
   }
-  //chart.draw(compdata, google.charts.Bar.convertOptions(compareoptions));
+  return searchroot;
 }
