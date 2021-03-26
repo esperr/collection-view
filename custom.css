@@ -200,16 +200,17 @@ text.label {
 #splash .row {
   margin-bottom: 1.75em;
 }
-
+/*
 .splashpart {
-  width: 30%;
+  min-width: 20em;
+  width: 31%;
   margin-right: .5em;
   margin-left: .5em;
   font-size: .9em;
 }
 
 .splashtitle {
-  width: 50%;
+  width: 35em;
   margin-right: .5em;
   margin-left: .5em;
-}
+} */
