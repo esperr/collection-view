@@ -81,7 +81,7 @@ function showFormatBaselineComps(searchkeys) {
           fontName: 'sans-serif',
 
          hAxis: {
-           title: 'Proportion',
+           title: 'Relative Proportion',
            maxValue: .7,
            minValue: -.7,
            viewWindow: {
@@ -161,7 +161,7 @@ function showCenturyBaselineComps(searchkeys) {
           fontName: 'sans-serif',
 
          hAxis: {
-           title: 'Proportion',
+           title: 'Relative Proportion',
            maxValue: .7,
            minValue: -.7,
            viewWindow: {
@@ -170,7 +170,7 @@ function showCenturyBaselineComps(searchkeys) {
            }
          },
          vAxis: {
-           title: 'Format'
+           title: 'Century'
          }
        };
 
