@@ -61,7 +61,7 @@ function psearch(searchstr, callback) {
     //console.log(calltime - pausetime);
     pausetime = calltime;
     $.ajax({
-      url: 'https://www.loc.gov/search/',
+      url: APIbase,
       error: function () {
         waitTime = waitTime+10;
         psearch(searchstr, callback);
@@ -352,6 +352,6 @@ function vennresults (d) {
 	  searchterms = d.label;
   }
   console.log(searchterms);
-  var vennlocurl = LOCstem + searchterms;
+  var vennlocurl = querystem + searchterms;
   window.open(vennlocurl,'_vennsearch');
 }

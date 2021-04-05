@@ -3,7 +3,7 @@ getbaselines();
 function getbaselines() {
   pausetime = performance.now();
   $.ajax({
-    url: 'https://www.loc.gov/search/',
+    url: APIbase,
     error: function () {
       startOver();
       return;
@@ -184,7 +184,7 @@ function showCenturyBaselineComps(searchkeys) {
            var term = centuryProportionsData.getColumnLabel(selectedItem.column);
            var centurysearchpart = century.replace(" to ", "/");
            console.log(centurysearchpart);
-           var searchroot = "https://www.loc.gov/search/?dates="
+             var searchroot = datestem;
            var locurl = searchroot + centurysearchpart + "&q=" + term;
            window.open(locurl,'_datesearch');
           }
@@ -210,7 +210,7 @@ function getSearchRoot(format) {
     return obj.formatlabel === format;
   });
   if (selectedformat.length > 0) {
-    var searchroot = "https://www.loc.gov/" + selectedformat[0].rootpart + "/?q=";
+    var searchroot = typestem + selectedformat[0].rootpart + firstqueryparam;
   }
 
   var origformatlabels = [
@@ -226,7 +226,7 @@ function getSearchRoot(format) {
     return obj.formatlabel === format;
   });
   if (selectedorigformat.length > 0) {
-    var searchroot = "https://www.loc.gov/search/?fa=original-format:" + selectedorigformat[0].rootpart + "&q=";
+    var searchroot = oftypestem + selectedorigformat[0].rootpart + laterqueryparam;
   }
   return searchroot;
 }

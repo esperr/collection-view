@@ -9,6 +9,8 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link href="custom.css" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="api-constants.js"></script>
+
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-MEPG31ZC2R"></script>
@@ -393,7 +395,6 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
 var searches = {};
 var pausetime = performance.now();
 var searchkey = 0;
-var LOCstem = "https://www.loc.gov/search/?q=";
 var centurybaselines = [];
 var formatbaselines = [];
 
@@ -545,7 +546,7 @@ function showCurrentSearch(searchkey) {
   $( "#breakdown" ).empty();
   $( "#breakdown" ).append('<p id="yourterm">Your search:</p>');
   $( "#yourterm" ).append("'" + currentSearch.term + "'");
-  var lcurl = LOCstem + encodeURI(currentSearch.term);
+  var lcurl = querystem + encodeURI(currentSearch.term);
   $( "#yourterm" ).append('<span id="count"> found <a href="' + lcurl + '" target="_pmresults">' + currentSearch.count + '</a> results</span>');
   $( "#yourterm" ).append('&nbsp; <a href="' + lcurl +'" " target="_blank"><span class="glyphicon glyphicon-link"></span></a>');
   $("#showedit").after(' &nbsp;&nbsp;<button id="deleteme" type="button" class="btn btn-danger">Delete this search</button>');
@@ -680,7 +681,7 @@ function dosearch(term) {
 
   function callsearch() {
     $.ajax({
-      url: 'https://www.loc.gov/search/',
+      url: APIbase,
       error: function () {
         startOver();
         return;
