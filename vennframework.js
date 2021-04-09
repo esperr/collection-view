@@ -90,6 +90,8 @@ function buildOLCounts(search) {
     if (sets.length == totalsets) {
       drawVennDiagram();
       writeSets();
+      if (totalsets > 7)
+        $("#vennresults").append('<div class="alert alert-warning" role="alert">Warning, Venn diagram may be inaccurate with more than 3 search terms.</div>');
       //drawPrintable ();
     }
   });
