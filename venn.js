@@ -1682,6 +1682,10 @@
             ret[area] = centre;
             if (centre.disjoint && (areas[i].size > 0)) {
                 console.log("WARNING: area " + area + " not represented on screen");
+                var areanames = area.map(x => areas[x].label);
+                console.log(areanames);
+                $("#vennresults").append('<div class="alert alert-warning" role="alert">Warning, could not create overlap for ' + areanames.join('/') + '. Venn diagram is incorrect.</div>');
+                
             }
         }
         return  ret;
