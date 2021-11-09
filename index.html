@@ -96,23 +96,24 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
       </div>
     </div>
 
-    <div class="card mb-3">
+    <!--<div class="card mb-3">
       <div class="card-header">
         Proportion of each format compared to entire collection
       </div>
       <div class="card-body">
         <div id="format_proportions"></div>
       </div>
-    </div>
+    </div>-->
 
-    <div class="card mb-3">
+    <!--<div class="card mb-3">
       <div class="card-header">
         Proportion in each century compared to entire collection
       </div>
       <div class="card-body">
         <div id="century_proportions"></div>
       </div>
-    </div>
+    </div>-->
+
   </div>
 
 
@@ -394,8 +395,8 @@ var searches = {};
 var pausetime = performance.now();
 var searchkey = 0;
 var LOCstem = "https://www.loc.gov/search/?q=";
-var centurybaselines = [];
-var formatbaselines = [];
+//var centurybaselines = [];
+//var formatbaselines = [];
 
 
 var formatwidth = $("#formatresults").innerWidth() * .9;
@@ -433,7 +434,6 @@ function handlesearch() {
 
 //Page actions and behaviors
 function showWait() {
-  console.log("Wait fired!");
   $( "#pmsearch" ).prop( "disabled", true );
   $( "#pmsearch").val("");
   $( "#runsearch" ).prop( "disabled", true );
@@ -445,7 +445,6 @@ function showWait() {
   }
 
 function showDone() {
-  console.log("Done fired!");
   $( "#pmsearch" ).prop( "disabled", false );
   $( "#runsearch" ).prop( "disabled", false );
   //$( "form" ).removeClass( "hideme" );
@@ -455,7 +454,6 @@ function showDone() {
   $('#waiting').modal('hide');
   setTimeout(function() {
     var isShown = $('#waiting').hasClass('show');
-    console.log(isShown);
     if (isShown) {
       $('#waiting').modal('hide');
     }
@@ -468,10 +466,9 @@ $( "#past" ).on( "click", ".pastsearch", function() {
   showCurrentSearch(searchIndex);
   showMultiFormats([searchIndex]);
   showFormatBaselineComps([searchIndex]);
-  showCenturyBaselineComps([searchIndex]);
+  //showCenturyBaselineComps([searchIndex]);
   //showFormats(searchkey);
   //drawYearChart([searchIndex]);
-  //console.log(searches[searchIndex]);
   if (searches[searchIndex].vennsets.length < 1) {
     $("#vennresults").empty();
     $("#vennresults").append('<p class="vennMsg">Only one valid search term entered<br />To see a Venn diagram, use Boolean opeartors or <em>combine</em> searches using the menu on the right</p>');
@@ -608,7 +605,6 @@ function showMultiFormats(searchkeys) {
       window.open(locurl,'_formatsearch');
      }
   }
-  console.log(searches);
   google.visualization.events.addListener(chart, 'select', selectHandler);
   //google.visualization.events.addListener(chart, 'ready', function () {
   //  showDone();
@@ -647,7 +643,7 @@ function showComparisons(comparisons) {
   $( "#formatresults" ).empty();
   showMultiFormats(comparisons);
   showFormatBaselineComps(comparisons);
-  showCenturyBaselineComps(comparisons);
+  //showCenturyBaselineComps(comparisons);
 }
 
 
@@ -671,7 +667,7 @@ function dosearch(term) {
   checkbaselines();
 
   function checkbaselines() {
-    if (centurybaselines.length > 0 && formatbaselines.length > 0) {
+    if (baselines.length === proportionfacets.length) {
       callsearch();
     } else {
       setTimeout(checkbaselines, 30);
@@ -744,7 +740,7 @@ function dosearch(term) {
         showSearches();
         showMultiFormats([searchkey]);
         showFormatBaselineComps([searchkey]);
-        showCenturyBaselineComps([searchkey]);
+        //showCenturyBaselineComps([searchkey]);
         //showFormats(searchkey);
         //var facets = data.facets;
         $( ".sharelink" ).remove();

@@ -1,5 +1,12 @@
 getbaselines();
 
+const proportionfacets = [
+  {typedesc: "original-format", type: "format" },
+  {typedesc: "dates", type: "century" },
+];
+
+const baselines = [];
+
 function getbaselines() {
   pausetime = performance.now();
   $.ajax({
@@ -13,107 +20,113 @@ function getbaselines() {
       fo: 'json'
     },
     success: function( data ) {
-      var totalcount = data.search.hits;
-      var formatfacets = data.facets.filter(obj => {
-        return obj.type === "original-format";
-      });
-      var datefacets = data.facets.filter(obj => {
-        return obj.type === "dates";
-      });
-      var formats = formatfacets[0].filters
-      var dates = datefacets[0].filters
-      $.each( formats, function( key, value ) {
-        var format = { 'format': value.title, 'count': value.count, 'proportion': value.count/totalcount };
-        formatbaselines.push(format);
-      });
-      $.each( dates, function( key, value ) {
-        var format = { 'century': value.title, 'count': value.count, 'proportion': value.count/totalcount };
-        centurybaselines.push(format);
-      });
-      console.log(formatbaselines);
+      let totalcount = data.search.hits;
+
+      for (var i = 0; i < proportionfacets.length; i++) {
+        let typefacets = data.facets.filter(obj => {
+          return obj.type === proportionfacets[i].typedesc;
+        });
+        let types = typefacets[0].filters
+        baselines.push([]);
+        let typename = proportionfacets[i].type;
+        $.each( types, function( key, value ) {
+          let typeconst = { 'count': value.count, 'proportion': value.count/totalcount };
+          typeconst[typename] = value.title;
+          baselines[i].push(typeconst);
+        });
+
+        //Build our target div...
+        $("#charts").append('<div class="card mb-3 facet-chart">');
+        $(".facet-chart").last().append('<div class="card-header">');
+        $(".facet-chart .card-header").last().append('Proportion of each <strong>' + capitalizeFirstLetter(typename) + '</strong> compared to that in the entire collection');
+        $(".facet-chart").last().append('<div class="card-body">');
+        $(".facet-chart .card-body").last().append('<div id="' + typename + '_proportions">');
+
+      }
+      console.log(baselines);
     }
   });
 }
 
 function showFormatBaselineComps(searchkeys) {
-  var allformats = [];
-  var formatProportionsArray =  [['Format']];
-  //grab all our search terms and formats first
-  for (i = 0; i < searchkeys.length; i++) {
-    var searchterm = searches[searchkeys[i]].term;
-    formatProportionsArray[0].push(searchterm);
-    var formatcounts = searches[searchkeys[i]].formatcounts;
-    for (c = 0; c < formatcounts.length; c++) {
-      if(allformats.indexOf(formatcounts[c].format) === -1){
-        allformats.push(formatcounts[c].format);
+  for (p = 0; p < proportionfacets.length; p++) {
+    let type = proportionfacets[p].type
+    var alltypes = [];
+    var typeProportionsArray =  [[type]];
+    let counttype = type + 'counts';
+    //grab all our search terms and formats first
+    for (i = 0; i < searchkeys.length; i++) {
+      var searchterm = searches[searchkeys[i]].term;
+      typeProportionsArray[0].push(searchterm);
+      var typecounts = searches[searchkeys[i]][counttype];
+      for (c = 0; c < typecounts.length; c++) {
+        if(alltypes.indexOf(typecounts[c][type]) === -1){
+          alltypes.push(typecounts[c][type]);
+        }
       }
     }
-  }
-  allformats.sort();
+    alltypes.sort();
 
-  for (i=0; i<allformats.length; i++) {
-    var formatvalues = [];
-    formatvalues.push(allformats[i]);
-    for (m=0; m<searchkeys.length; m++) {
-      var mysearchformat = searches[searchkeys[m]].formatcounts.filter(obj => {
-        return obj.format === allformats[i];
-      });
-      baselinecomp = formatbaselines.filter(obj => {
-        return obj.format === allformats[i];
-      });
-      if (typeof mysearchformat[0] !== "undefined") {
-        var mycomparison = mysearchformat[0].proportion - baselinecomp[0].proportion;
-      } else {
-        var mycomparison = 0;
+    for (i=0; i<alltypes.length; i++) {
+      var typevalues = [];
+      typevalues.push(alltypes[i]);
+      for (m=0; m<searchkeys.length; m++) {
+        var mysearchtype = searches[searchkeys[m]][counttype].filter(obj => {
+          return obj[type] === alltypes[i];
+        });
+        baselinecomp = baselines[p].filter(obj => {
+          return obj[type] === alltypes[i];
+        });
+        if (typeof mysearchtype[0] !== "undefined") {
+          console.log(baselinecomp);
+          var mycomparison = mysearchtype[0].proportion - baselinecomp[0].proportion;
+        } else {
+          var mycomparison = 0;
+        }
+        typevalues.push(mycomparison);
       }
-      formatvalues.push(mycomparison);
+      typeProportionsArray.push(typevalues);
     }
-    formatProportionsArray.push(formatvalues);
-  }
-  console.log(searches);
-  var formatProportionsData = google.visualization.arrayToDataTable( formatProportionsArray );
-  var chartheight = (formatProportionsArray.length * 20) * searchkeys.length;
-  if (chartheight < 120) { chartheight = 120}
-  var formatPropOptions = {
-          bars: 'horizontal',
-          height: chartheight,
-          //width: mywidth,
-          fontName: 'sans-serif',
+    var typeProportionsData = google.visualization.arrayToDataTable( typeProportionsArray );
+    console.log(typeProportionsData);
+    var chartheight = (typeProportionsArray.length * 20) * searchkeys.length;
+    if (chartheight < 120) { chartheight = 120}
+    var typePropOptions = {
+            bars: 'horizontal',
+            height: chartheight,
+            //width: mywidth,
+            fontName: 'sans-serif',
 
-         hAxis: {
-           title: 'Relative Proportion',
-           maxValue: .7,
-           minValue: -.7,
-           viewWindow: {
-             max: .9,
-             min: -.9
+           hAxis: {
+             title: 'Relative Proportion',
+             maxValue: .7,
+             minValue: -.7,
+             viewWindow: {
+               max: .9,
+               min: -.9
+             }
+           },
+           vAxis: {
+             title: capitalizeFirstLetter(type)
            }
-         },
-         vAxis: {
-           title: 'Format'
+         };
+
+         var chart = new google.charts.Bar(document.getElementById(type + '_proportions'));
+         //Here comes the clicky bit...
+         function selectHandler() {
+           var selectedItem = chart.getSelection()[0];
+           if (selectedItem && selectedItem.row != null) {
+             var format = typeProportionsData.getValue(selectedItem.row, 0);
+             var term = typeProportionsData.getColumnLabel(selectedItem.column);
+             var searchroot = getSearchRoot(format);
+             var locurl = searchroot + term;
+             window.open(locurl,'_formatsearch');
+            }
          }
-       };
+         google.visualization.events.addListener(chart, 'select', selectHandler);
 
-       var chart = new google.charts.Bar(document.getElementById('format_proportions'));
-       //Here comes the clicky bit...
-       function selectHandler() {
-         var selectedItem = chart.getSelection()[0];
-         if (selectedItem && selectedItem.row != null) {
-           console.log(selectedItem);
-           var format = formatProportionsData.getValue(selectedItem.row, 0);
-           console.log(format);
-           var term = formatProportionsData.getColumnLabel(selectedItem.column);
-           console.log(term);
-           var searchroot = getSearchRoot(format);
-           var locurl = searchroot + term;
-           window.open(locurl,'_formatsearch');
-          }
-       }
-       console.log(searches);
-       google.visualization.events.addListener(chart, 'select', selectHandler);
-
-       chart.draw(formatProportionsData, google.charts.Bar.convertOptions(formatPropOptions));
-
+         chart.draw(typeProportionsData, google.charts.Bar.convertOptions(typePropOptions));
+  }
 }
 
 function showCenturyBaselineComps(searchkeys) {
@@ -150,7 +163,6 @@ function showCenturyBaselineComps(searchkeys) {
     }
     centuryProportionsArray.push(centuryvalues);
   }
-  console.log(centuryProportionsArray);
   var centuryProportionsData = google.visualization.arrayToDataTable( centuryProportionsArray );
   var chartheight = (centuryProportionsArray.length * 25) * searchkeys.length;
   if (centuryProportionsArray < 5) { chartheight = 130 }
@@ -179,11 +191,9 @@ function showCenturyBaselineComps(searchkeys) {
        function selectHandler() {
          var selectedItem = chart.getSelection()[0];
          if (selectedItem && selectedItem.row != null) {
-           console.log(selectedItem);
            var century = centuryProportionsData.getValue(selectedItem.row, 0);
            var term = centuryProportionsData.getColumnLabel(selectedItem.column);
            var centurysearchpart = century.replace(" to ", "/");
-           console.log(centurysearchpart);
            var searchroot = "https://www.loc.gov/search/?dates="
            var locurl = searchroot + centurysearchpart + "&q=" + term;
            window.open(locurl,'_datesearch');
@@ -194,8 +204,12 @@ function showCenturyBaselineComps(searchkeys) {
 
 }
 
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 function getSearchRoot(format) {
-  var formatlabels = [
+  const formatlabels = [
     {formatlabel: "newspaper", rootpart: "newspapers" },
     {formatlabel: "manuscript/mixed material", rootpart: "manuscripts" },
     {formatlabel: "book", rootpart: "books" },
@@ -213,7 +227,7 @@ function getSearchRoot(format) {
     var searchroot = "https://www.loc.gov/" + selectedformat[0].rootpart + "/?q=";
   }
 
-  var origformatlabels = [
+  const origformatlabels = [
     {formatlabel: "periodical", rootpart: "periodical" },
     {formatlabel: "legislation", rootpart: "legislation" },
     {formatlabel: "web page", rootpart: "web+page" },
