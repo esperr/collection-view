@@ -11,14 +11,14 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-MEPG31ZC2R"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MEPG31ZC2R"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-  gtag('config', 'G-MEPG31ZC2R');
-</script>
+    gtag('config', 'G-MEPG31ZC2R');
+  </script>
 
 </head>
 
@@ -47,20 +47,8 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
 
 <div class="row">
 
-<!--<form id="search">
-    <input id="pmsearch" type="text" />
-    <input id="runsearch" type="button" value="Search by category" />
-</form>
--->
 
 <div id="left" class="col-sm-12 col-md-6 col-lg-8">
-
-<!--<div id="search" class="input-group input-group-lg">
-  <input type="text" id="pmsearch" class="form-control">
-  <span class="input-group-btn">
-    <button id="runsearch" class="btn btn-primary" type="button">Search</button>
-  </span>
-</div>-->
 
 <div id="search" class="input-group mb-3 col-lg-9 col-md-12 col-sm-12">
   <input type="text" id="pmsearch" class="form-control">
@@ -76,7 +64,6 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
 <div id="charts">
     <div id="formatpanel" class="card mb-3">
       <div class="card-header">
-        <a href="questionsandanswers.html#yearplanation" target="_qanda"><span class="question-prompt glyphicon glyphicon-question-sign"></span></a>
         Item formats
       </div>
       <div class="card-body">
@@ -88,32 +75,12 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
 
     <div id="vennpanel" class="card mb-3">
       <div class="card-header">
-        <a href="questionsandanswers.html#vennplanation" target="_qanda"><span class="question-prompt glyphicon glyphicon-question-sign"></span></a>
         Venn diagram
       </div>
       <div class="card-body">
         <div id="vennresults"></div>
       </div>
     </div>
-
-    <!--<div class="card mb-3">
-      <div class="card-header">
-        Proportion of each format compared to entire collection
-      </div>
-      <div class="card-body">
-        <div id="format_proportions"></div>
-      </div>
-    </div>-->
-
-    <!--<div class="card mb-3">
-      <div class="card-header">
-        Proportion in each century compared to entire collection
-      </div>
-      <div class="card-body">
-        <div id="century_proportions"></div>
-      </div>
-    </div>-->
-
   </div>
 
 
@@ -121,22 +88,13 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
 
 <div class="col-sm-12 col-md-6 col-lg-4">
 
-  <!--<div id="load-session" class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">Load previous session</h3>
+  <div id="past" class="card mb-3">
+    <div class="card-header">
+      Searches
     </div>
-    <div class="panel-body">
-      <button id="loadText" class="btn btn-default" title="Load a session from a saved file on this machine" data-toggle="modal" data-target="#load-text" type="button">Load from textfile</button>
+    <div id="searches" class="panel-body">
     </div>
-  </div>-->
-
-<div id="past" class="card mb-3">
-  <div class="card-header">
-    Searches
   </div>
-  <div id="searches" class="panel-body">
-  </div>
-</div>
 
 </div>
 
@@ -233,133 +191,8 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
       <img class="card-img-top" src="popcorn-comps-century-props.png">
     </div>
   </div>
-
-    <!--<div class="col-sm-12 col-md-12 col-lg-12">
-    <p>If you want to explore different search strategies, you can directly <em>compare</em> them to one another in order to zero-in on exactly the terms you want to use.
-      For example, here is the comparison between searches for 'popcorn' and 'popped corn'.<em><a href="about.html">(more)</a></em></p>
-    </div>
-    <div class="col-sm-12 col-md-12 col-lg-12">
-      <img src="popcorn-comps-formats.png" style="float: left;" width=45%>
-      <img src="popcorn-comps-venn.png" style="float: left;" width=45%>
-    </div>-->
   </div>
 </div>
-</div>
-
-
-
-<div id="hedges-list" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="hedges-list">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Hedges</h4>
-      </div>
-      <div  class="modal-body">
-        <form id="hedges"></form>
-      </div>
-      <div class="modal-footer">
-        <span style="float: left;">Sources: <a href="https://www.ncbi.nlm.nih.gov/books/NBK3827/#pubmedhelp.Clinical_Queries_Filters" target="_blank">NLM</a>, <a href="https://hiru.mcmaster.ca/hiru/HIRU_Hedges_MEDLINE_Strategies.aspx"  target="_blank">HiRU</a></span>
-        <button type="button" id="hedge" class="btn btn-primary">Add Hedge</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="unique-records" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="unique-records">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Unique Records</h4>
-      </div>
-      <div id="uniques" class="modal-body">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="save-session" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="save-session">
-  <div class="modal-dialog modal-sm" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Save this session</h4>
-      </div>
-      <div class="modal-body">
-        <p>You can save this session to return and work with it later.</p> <p>Choose to save it locally (only on this computer/browser) or to download it
-          as a text file.</p>
-        <a id="savemeText" href="" download="searchworkbench_session.txt" class="btn btn-success">Download session</a>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="save-local" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="save-local">
-  <div class="modal-dialog modal-sm" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Save this session</h4>
-      </div>
-      <div class="modal-body">
-        <input type='text' name='sessionname' value="enter a name"><br />
-        <em>This session will only be saved on this browser and machine &ndash; choose "download session" to export it to another machine.</em>
-      </div>
-      <div class="modal-footer">
-        <button id="savelocally" type="button" class="btn btn-success">Save</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="load-local" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="load-local">
-  <div class="modal-dialog modal-sm" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Load a saved session</h4>
-      </div>
-      <div class="modal-body">
-        <p>Choose a saved session from the following list:</p>
-        <div id="loadme"></div>
-        <br />
-        <button id="loadLocal" type="button" class="btn btn-success">Load this session</button>
-        <button id="deleteLocal" type="button" class="btn btn-danger">Delete</button>
-      </div>
-      <div class="modal-footer">
-
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="load-text" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="load-text">
-  <div class="modal-dialog modal-sm" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Load session from text file</h4>
-      </div>
-      <div class="modal-body">
-        <input type="file" id="input"  accept="text/plain">
-      </div>
-      <div class="modal-footer">
-        <button id="loadtextfile" type="button" class="btn btn-success">Load this session</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
 </div>
 
 <div id="waiting" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="load-text">
@@ -413,16 +246,6 @@ google.charts.load('current', {packages: ['corechart', 'bar']});
 
 (function() {
 
-//$('[data-toggle="tooltip"]').tooltip();
-
-//do hedges programatically
-
-//localSession stuff...
-if (storageAvailable('localStorage')) {
-  $( "#savemeText" ).before('<button id="savemeLocal" type="button" class="btn btn-success">Save locally</button> ');
-}
-
-getLocalsessions();
 
 function handlesearch() {
   var term = $("#pmsearch").val();
@@ -438,19 +261,12 @@ function showWait() {
   $( "#pmsearch").val("");
   $( "#runsearch" ).prop( "disabled", true );
   $('#waiting').modal('show');
-  //$( "form" ).addClass( "hideme" );
-  //$( "#yearresults").empty();
-  //$( "#yearresults" ).append("<div id='loading'><p class='text-center'>Grabbing your results &mdash; please wait</p></div>")
-  //$( "#yearresults p" ).append( '<br /><img src="loading-bars.svg">' );
   }
 
 function showDone() {
   $( "#pmsearch" ).prop( "disabled", false );
   $( "#runsearch" ).prop( "disabled", false );
-  //$( "form" ).removeClass( "hideme" );
   $( "#runsearch" ).removeClass( "hideme" );
-  //$("#loading").remove();
-  //$("#fetchresults").remove();
   $('#waiting').modal('hide');
   setTimeout(function() {
     var isShown = $('#waiting').hasClass('show');
@@ -466,9 +282,6 @@ $( "#past" ).on( "click", ".pastsearch", function() {
   showCurrentSearch(searchIndex);
   showMultiFormats([searchIndex]);
   showFormatBaselineComps([searchIndex]);
-  //showCenturyBaselineComps([searchIndex]);
-  //showFormats(searchkey);
-  //drawYearChart([searchIndex]);
   if (searches[searchIndex].vennsets.length < 1) {
     $("#vennresults").empty();
     $("#vennresults").append('<p class="vennMsg">Only one valid search term entered<br />To see a Venn diagram, use Boolean opeartors or <em>combine</em> searches using the menu on the right</p>');
@@ -495,7 +308,6 @@ $( "#past" ).on( "click", "#compare", function() {
       });
       showComparisons(comparisons);
       compVenn(comparisons);
-      //drawYearChart(comparisons);
     });
 
 $( "#past" ).on( "click", ".showsearches", function() {
@@ -514,7 +326,6 @@ function showSearches() {
   $( "#searches" ).empty();
   $( "#past" ).removeClass( "hideme" );
   $( "#searches" ).attr( 'style', 'max-height:' + maxheight + 'px' );
-
   $( "#searches" ).append("<dl>");
   for (var key in searches) {
     if (searches.hasOwnProperty(key)) {
@@ -531,7 +342,6 @@ function showSearches() {
   $("#past input[name='term']").toggle();
   if ($("#searches dt").last().data("searchIndex") > 0) {
     $("#searches dl").after('<input id="showcompare" type="button" class="btn btn-default" value="Compare searches" />');
-    //$("#showcompare").after('<button id="savebutton" class="btn btn-default" data-toggle="modal" data-target="#save-session">Save session</button>');
   }
  }
 
@@ -614,36 +424,11 @@ function showMultiFormats(searchkeys) {
   showDone();
 }
 
-
-//function showFormats(searchkey) {
-//  var myformats = searches[searchkey].formatcounts;
-//  var formatnames = ['Format'];
-//  var formatnumbers = [searches[searchkey].term]
-//  for (i=0; i<myformats.length; i++) {
-//    formatnames.push(myformats[i].format);
-//    formatnumbers.push(myformats[i].count);
-//  }
-//  var countsarray = [formatnames, formatnumbers];
-//  var data = google.visualization.arrayToDataTable(countsarray);
-
-//  var options = {
-//  width: 900,
-//  height: 300,
-//  legend: { position: 'top', maxLines: 3 },
-//  bar: { groupWidth: '75%' },
-//  isStacked: true
-//  };
-//  var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
-//  chart.draw(data, options);
-//}
-
-
 function showComparisons(comparisons) {
   $( "#breakdown" ).empty();
   $( "#formatresults" ).empty();
   showMultiFormats(comparisons);
   showFormatBaselineComps(comparisons);
-  //showCenturyBaselineComps(comparisons);
 }
 
 
