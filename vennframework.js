@@ -58,10 +58,9 @@ function psearch(searchstr, callback) {
 
   function callutils() {
     calltime = performance.now();
-    //console.log(calltime - pausetime);
     pausetime = calltime;
     $.ajax({
-      url: 'https://www.loc.gov/search/',
+      url: baseURL,
       error: function () {
         waitTime = waitTime+10;
         psearch(searchstr, callback);
@@ -81,12 +80,8 @@ function psearch(searchstr, callback) {
 
 function buildOLCounts(search) {
   psearch(search.terms, function( data ) {
-    myOverlap = new setOverlapSet(search.sets,data.search.hits);
+    myOverlap = new setOverlapSet(search.sets,getCount(data));
     sets.push(myOverlap);
-    console.log("Sets: ");
-    console.log(sets.length);
-    console.log("Total Sets: ");
-    console.log(totalsets);
     if (sets.length == totalsets) {
       drawVennDiagram();
       writeSets();
@@ -141,7 +136,6 @@ function getOverlaps() {
   }
 
   totalsets = vennsearches.length + sets.length;
-  console.log(totalsets);
   getOLCounts();
 
 }
@@ -173,7 +167,7 @@ function getSimpleSets(termsarray, possibles) {
   $.each(termsarray, function (i, term) {
     //for (term of termsarray) {
     psearch(term, function( data ) {
-	    var numResults = Number(data.search.hits);
+	    var numResults = Number(getCount(data));
 	    if (numResults != 0) {
 		    mySet = new setSet(term, numResults);
 		    sets.push(mySet);
@@ -197,7 +191,7 @@ function startVenn(searchkey, term) {
   //check for parentheses in our search string
   var termsarray = [];
   var parensdex = 0;
-
+  //console.log("term: " + term);
   findParens(term);
 
   function findParens() {
@@ -217,14 +211,14 @@ function startVenn(searchkey, term) {
       }
     } else { return; }
   }
-
+  //console.log("Termsarray: " + termsarray);
   var termsarray2 = term.split(/ and | or | not /i);
   termsarray.push.apply(termsarray, termsarray2);
   termsarray = partCleaner(termsarray);
   var termsarray = termsarray.filter(function(val) {
     return !(val === " " || val === "" || typeof val == "undefined" || val === null || val == " AND " || val == " OR " || val == " NOT ");
   });
-
+  //console.log("Termsarray: " + termsarray);
 
   var possibleTerms = termsarray.length;
   //if (data.esearchresult.errorlist) {
@@ -353,7 +347,6 @@ function vennresults (d) {
   } else {
 	  searchterms = d.label;
   }
-  console.log(searchterms);
   var vennlocurl = LOCstem + searchterms;
   window.open(vennlocurl,'_vennsearch');
 }

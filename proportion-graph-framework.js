@@ -1,16 +1,9 @@
-getbaselines();
-
-const proportionfacets = [
-  {typedesc: "original-format", type: "format" },
-  {typedesc: "dates", type: "century" },
-];
-
 const baselines = [];
 
 function getbaselines() {
   pausetime = performance.now();
   $.ajax({
-    url: 'https://www.loc.gov/search/',
+    url: baseURL,
     error: function () {
       startOver();
       return;
@@ -43,7 +36,6 @@ function getbaselines() {
         $(".facet-chart .card-body").last().append('<div id="' + typename + '_proportions">');
 
       }
-      console.log(baselines);
     }
   });
 }
@@ -78,7 +70,6 @@ function showFormatBaselineComps(searchkeys) {
           return obj[type] === alltypes[i];
         });
         if (typeof mysearchtype[0] !== "undefined") {
-          console.log(baselinecomp);
           var mycomparison = mysearchtype[0].proportion - baselinecomp[0].proportion;
         } else {
           var mycomparison = 0;
@@ -88,7 +79,6 @@ function showFormatBaselineComps(searchkeys) {
       typeProportionsArray.push(typevalues);
     }
     var typeProportionsData = google.visualization.arrayToDataTable( typeProportionsArray );
-    console.log(typeProportionsData);
     var chartheight = (typeProportionsArray.length * 20) * searchkeys.length;
     if (chartheight < 120) { chartheight = 120}
     var typePropOptions = {
