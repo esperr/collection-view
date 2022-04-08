@@ -227,6 +227,9 @@ Designed and built by Ed Sperr (esperr@uga.edu or ed_sperr@hotmail.com)
 var searches = {};
 var pausetime = performance.now();
 var searchkey = 0;
+var searchType = "all";
+var mybaselines = baselines[searchType];
+
 const LOCstem = "https://www.loc.gov/search/?q=";
 
 var formatwidth = $("#formatresults").innerWidth() * .9;
@@ -446,11 +449,10 @@ function dosearch(term) {
   //showWait();
   $('#waiting').modal('show');
   pausetime = performance.now();
-
   checkbaselines();
 
   function checkbaselines() {
-    if (baselines.length === proportionfacets.length) {
+    if (mybaselines.length === proportionfacets.length) {
       callsearch();
     } else {
       setTimeout(checkbaselines, 30);
@@ -476,6 +478,7 @@ function dosearch(term) {
           return;
         }
         var totalcount = getCount(data);
+        console.log(totalcount);
         if (totalcount == "0") {
           $("#breakdown").prepend('<div class="alert alert-danger" role="alert">Nothing found for "' + term + '"! Please try again...</div>');
           showDone();
@@ -488,7 +491,7 @@ function dosearch(term) {
           }
 
         for (let i = 0; i < proportionfacets.length; i++) {
-          let myFacets = getFacets(data, proportionfacets[i].typedesc, "lc");
+          let myFacets = getFacets(data, proportionfacets[i].typedesc);
           let type = proportionfacets[i].type;
           let facetcounts = [];
           $.each( myFacets, function( key, value ) {
@@ -501,52 +504,13 @@ function dosearch(term) {
             search[type + 'counts'] = facetcounts;
           });
         }
-
-        //let formats = getFacets(data, "original-format", "lc");
-        //var formatcounts = [];
-        //$.each( formats, function( key, value ) {
-        //  var mycount = value.count;
-        //  var mytitle = value.title;
-          //var mymatch = formatbaselines.filter(obj => {
-          //  return obj.format === mytitle;
-          //});
-          //var proportion = mycount/totalcount;
-          //var format = { 'format': mytitle, 'count': mycount, 'proportion': proportion };
-          //formatcounts.push(format);
-          //search['formatcounts'] = formatcounts;
-        //});
-
-        //var centuryfacets = data.facets.filter(obj => {
-        //  return obj.type === "dates";
-        //});
-        //var centuries = centuryfacets[0].filters
-        //var centurycounts = [];
-        //$.each( centuries, function( key, value ) {
-        //  var mycount = value.count;
-        //  var mytitle = value.title;
-        //  var proportion = mycount/totalcount;
-        //  var century = { 'century': mytitle, 'count': mycount, 'proportion': proportion };
-        //  centurycounts.push(century);
-          //search['centurycounts'] = centurycounts;
-        //});
-        //search = {
-        //  'term': term,
-        //  'count': data.search.hits,
-        //  'formatcounts': formatcounts,
-        //  'centurycounts': centurycounts,
-        //};
         searches[searchkey] = search;
-
-        //showDone();
         console.log(searches)
         showSearches();
         showMultiFormats([searchkey]);
         showFormatBaselineComps([searchkey]);
-        //showCenturyBaselineComps([searchkey]);
-        //showFormats(searchkey);
-        //var facets = data.facets;
+
         $( ".sharelink" ).remove();
-        //yearsearch(searchkey, term);
         startVenn(searchkey, term);
         showCurrentSearch(searchkey);
         searchkey++;

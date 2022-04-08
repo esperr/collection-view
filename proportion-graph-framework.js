@@ -1,4 +1,4 @@
-const baselines = [];
+const baselines = { all: [] };
 
 function getbaselines() {
   pausetime = performance.now();
@@ -13,19 +13,16 @@ function getbaselines() {
       fo: 'json'
     },
     success: function( data ) {
-      let totalcount = data.search.hits;
+      let totalcount = getCount(data);
 
       for (var i = 0; i < proportionfacets.length; i++) {
-        let typefacets = data.facets.filter(obj => {
-          return obj.type === proportionfacets[i].typedesc;
-        });
-        let types = typefacets[0].filters
-        baselines.push([]);
+        let types = getFacets(data, proportionfacets[i].typedesc);
+        mybaselines.push([]);
         let typename = proportionfacets[i].type;
         $.each( types, function( key, value ) {
           let typeconst = { 'count': value.count, 'proportion': value.count/totalcount };
           typeconst[typename] = value.title;
-          baselines[i].push(typeconst);
+          mybaselines[i].push(typeconst);
         });
 
         //Build our target div...
@@ -66,7 +63,7 @@ function showFormatBaselineComps(searchkeys) {
         var mysearchtype = searches[searchkeys[m]][counttype].filter(obj => {
           return obj[type] === alltypes[i];
         });
-        baselinecomp = baselines[p].filter(obj => {
+        baselinecomp = mybaselines[p].filter(obj => {
           return obj[type] === alltypes[i];
         });
         if (typeof mysearchtype[0] !== "undefined") {
